@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_srvs
   mavros_msgs
   dynamic_reconfigure
+  rostest
   )
 
 generate_dynamic_reconfigure_options(
@@ -89,26 +90,21 @@ target_link_libraries(CircleFlier
 ## Testing ##
 #############
 
-if(CATKIN_ENABLE_TESTING)
-  find_package(rostest REQUIRED)
-
-  add_rostest_gtest(
-    ControlTestRostest
-    test/control_test_rostest.launch
-    test/control_test.cpp
+add_rostest_gtest(
+  ControlTestRostest
+  test/control_test_rostest.launch
+  test/control_test.cpp
   )
 
 target_compile_definitions(ControlTestRostest PRIVATE ROSTEST=1)
 
-  target_link_libraries(
-    ControlTestRostest
-    ${catkin_LIBRARIES}
+target_link_libraries(
+  ControlTestRostest
+  ${catkin_LIBRARIES}
   )
 
-  add_dependencies(
-    ControlTestRostest
-    ${${PROJECT_NAME}_EXPORTED_TARGETS}
-    ${catkin_EXPORTED_TARGETS}
+add_dependencies(
+  ControlTestRostest
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
   )
-
-endif()
