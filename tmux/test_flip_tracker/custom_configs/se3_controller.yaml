@@ -1,0 +1,10 @@
+constraints:
+
+  attitude_rate_saturation: 100.0 # [rad/s]
+
+  # When the controller wants to output tilt larger than this,
+  # it will return an empty command instead, which should trigger
+  # a failsafe in the control manager.
+  tilt_angle_failsafe:
+    enabled: false
+    limit: deg(0)
