@@ -19,12 +19,12 @@ windows:
   - spawn:
       layout: tiled
       panes:
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "1 --f330 --enable-rangefinder"
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "2 --f450 --enable-rangefinder"
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "3 --f550 --enable-rangefinder"
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "4 --x500 --enable-rangefinder"
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "5 --t650 --enable-rangefinder"
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "6 --eaglemk2 --enable-rangefinder --model-package eagle_gazebo_resources"
+        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "1 --f330 --enable-rangefinder --enable-ground-truth"
+        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "2 --f450 --enable-rangefinder --enable-ground-truth"
+        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "3 --f550 --enable-rangefinder --enable-ground-truth"
+        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "4 --x500 --enable-rangefinder --enable-ground-truth"
+        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "5 --t650 --enable-rangefinder --enable-ground-truth"
+        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "6 --eaglemk2 --enable-rangefinder --model-package eagle_gazebo_resources --enable-ground-truth"
   - control:
       layout: tiled
       panes:
