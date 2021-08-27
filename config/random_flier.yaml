@@ -1,6 +1,6 @@
 active: false
 main_timer_rate: 100
-max_distance: 120
+max_distance: 30
 height: 1.5
 randomize_distance: false
-randomize_heading: true
+randomize_heading: false

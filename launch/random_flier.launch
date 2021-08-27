@@ -16,7 +16,7 @@
       <remap from="~position_command_in" to="control_manager/position_cmd" />
 
         <!-- Publishers -->
-      <remap from="~reference_out" to="control_manager/reference" />
+      <remap from="~reference_out" to="pathfinder/reference" />
 
         <!-- Services -->
       <remap from="~activate_in" to="automatic_start/start" />

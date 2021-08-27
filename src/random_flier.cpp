@@ -161,9 +161,9 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
     // create new point to fly to
     mrs_msgs::ReferenceStampedSrv new_point;
-    new_point.request.header.frame_id = "gps_origin";
+    new_point.request.header.frame_id = "slam_mapping_origin";
 
-    double dist, direction, heading;
+    double dist, direction, heading, height;
 
     if (_randomize_distance_) {
       dist = randd(0, _max_distance_);
@@ -179,18 +179,37 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
       heading = 0;
     }
 
+    height = randd(1.0, 20.0);
+
+    /* if (cmd_x > 5.0) { */
+    /*   if (cmd_z < 10) { */
+    /*     height = randd(10.0, 20.0); */
+    /*   } else { */
+    /*     height = randd(1.0, 10.0); */
+    /*   } */
+    /* } */
+
+    double transfer_p = randd(0, 100);
+    double random_y   = randd(-10, 10);
+
     while (true) {
 
-      new_point.request.reference.position.x = cmd_x + cos(direction) * dist;
-      new_point.request.reference.position.y = cmd_y + sin(direction) * dist;
-      new_point.request.reference.position.z = _height_;
+      if (transfer_p > 50) {
+        new_point.request.reference.position.x = cmd_x + cos(direction) * dist;
+        new_point.request.reference.position.y = cmd_y + sin(direction) * dist;
+      } else {
+        new_point.request.reference.position.x = 10;
+        new_point.request.reference.position.y = random_y;
+      }
+      new_point.request.reference.position.z = height;
       new_point.request.reference.heading    = heading;
 
       if (service_client_reference_.call(new_point)) {
 
         if (new_point.response.success) {
 
-          ROS_INFO("New goal: %.2f %.2f", new_point.request.reference.position.x, new_point.request.reference.position.y);
+          ROS_INFO("New goal: %.2f %.2f %.2f", new_point.request.reference.position.x, new_point.request.reference.position.y,
+                   new_point.request.reference.position.z);
 
           last_successfull_command_ = ros::Time::now();
           break;
