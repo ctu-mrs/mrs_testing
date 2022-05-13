@@ -33,3 +33,9 @@
     <description>the TfTest nodelet</description>
   </class>
 </library>
+
+<library path="lib/libTopicRepublisher">
+  <class name="mrs_uav_testing/TopicRepublisher" type="mrs_uav_testing::TopicRepublisher" base_class_type="nodelet::Nodelet">
+    <description>the TopicRepusblisher nodelet</description>
+  </class>
+</library>
