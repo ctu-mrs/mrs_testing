@@ -62,6 +62,7 @@ typedef enum
 {
   IDLE_STATE,
   SPAWN_STATE,
+  WAIT_FOR_SPAWN,
   TAKEOFF_STATE,
   CHANGE_ESTIMATOR_STATE,
   CHANGE_TRACKER_STATE,
@@ -95,9 +96,10 @@ typedef enum
   ERROR_STATE,
 } ControlState_t;
 
-const char* state_names[33] = {
+const char* state_names[34] = {
     "IDLE_STATE",
     "SPAWN_STATE",
+    "WAIT_FOR_SPAWN",
     "TAKEOFF_STATE",
     "CHANGE_ESTIMATOR_STATE",
     "CHANGE_TRACKER_STATE",
@@ -443,12 +445,21 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
       ROS_INFO_THROTTLE(1.0, "[ControlTest]: idling");
 
-      changeState(SPAWN_STATE);
+      if (sh_spawner_diag_.hasMsg()) {
+        changeState(SPAWN_STATE);
+      } else {
+        ROS_INFO_THROTTLE(1.0, "[ControlTest]: waiting for spawner diagnostics");
+      }
 
       break;
     }
 
     case SPAWN_STATE: {
+
+      break;
+    }
+
+    case WAIT_FOR_SPAWN: {
 
       ROS_INFO_THROTTLE(1.0, "[ControlTest]: waiting for UAV");
 
@@ -895,6 +906,20 @@ void ControlTest::changeState(const ControlState_t new_state) {
       /* //{ spawn */
 
       spawnUAV(_spawn_args_);
+
+      changeState(WAIT_FOR_SPAWN);
+
+      break;
+
+      //}
+    }
+
+    case WAIT_FOR_SPAWN: {
+
+      /* waiting for spawn //{ */
+
+      ros::Duration(10.0).sleep();
+      ROS_INFO("[ControlTest]: waiting for spawn");
 
       break;
 

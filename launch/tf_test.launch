@@ -1,0 +1,8 @@
+<launch>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub" args="3.0 0.0 0.0 0 0.0 0.0 A B" />
+
+  <node name="tf_test" pkg="nodelet" type="nodelet" args="standalone mrs_uav_testing/TfTest" output="screen" >
+  </node>
+
+</launch>

@@ -21,9 +21,17 @@ generate_dynamic_reconfigure_options(
   cfg/circle_flier.cfg
   )
 
+set(LIBRARIES
+  RandomFlier TrajectoryRandomFlier PathRandomFlier CircleFlier TfTest
+  )
+
+set(EXECUTABLES
+  ControlTest
+  )
+
 catkin_package(
   CATKIN_DEPENDS nav_msgs mrs_lib std_msgs std_srvs mavros_msgs
-  LIBRARIES RandomFlier TrajectoryRandomFlier PathRandomFlier CircleFlier
+  LIBRARIES ${LIBRARIES}
   )
 
 include_directories(
@@ -32,7 +40,9 @@ include_directories(
   ${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake
   )
 
-add_executable(ControlTest test/control_test.cpp)
+add_executable(ControlTest
+  test/control_test.cpp
+  )
 
 add_dependencies(ControlTest
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -43,7 +53,9 @@ target_link_libraries(ControlTest
   ${catkin_LIBRARIES}
   )
 
-add_library(RandomFlier src/random_flier.cpp)
+add_library(RandomFlier
+  src/random_flier.cpp
+  )
 
 add_dependencies(RandomFlier
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -54,7 +66,9 @@ target_link_libraries(RandomFlier
   ${catkin_LIBRARIES}
   )
 
-add_library(TrajectoryRandomFlier src/trajectory_random_flier.cpp)
+add_library(TrajectoryRandomFlier
+  src/trajectory_random_flier.cpp
+  )
 
 add_dependencies(TrajectoryRandomFlier
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -65,7 +79,9 @@ target_link_libraries(TrajectoryRandomFlier
   ${catkin_LIBRARIES}
   )
 
-add_library(PathRandomFlier src/path_random_flier.cpp)
+add_library(PathRandomFlier
+  src/path_random_flier.cpp
+  )
 
 add_dependencies(PathRandomFlier
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -76,7 +92,9 @@ target_link_libraries(PathRandomFlier
   ${catkin_LIBRARIES}
   )
 
-add_library(CircleFlier src/circle_flier.cpp)
+add_library(CircleFlier
+  src/circle_flier.cpp
+  )
 
 add_dependencies(CircleFlier
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -87,9 +105,22 @@ target_link_libraries(CircleFlier
   ${catkin_LIBRARIES}
   )
 
-#############
-## Testing ##
-#############
+add_library(TfTest
+  src/tf_test.cpp
+  )
+
+add_dependencies(TfTest
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  )
+
+target_link_libraries(TfTest
+  ${catkin_LIBRARIES}
+  )
+
+## --------------------------------------------------------------
+## |                           Testing                          |
+## --------------------------------------------------------------
 
 add_rostest_gtest(
   ControlTestRostest
@@ -108,4 +139,37 @@ add_dependencies(
   ControlTestRostest
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
+  )
+
+## --------------------------------------------------------------
+## |                           Install                          |
+## --------------------------------------------------------------
+
+install(TARGETS ${LIBRARIES}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+  )
+
+install(TARGETS ${EXECUTABLES}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
+
+install(DIRECTORY launch config worlds layouts rviz test
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  )
+
+install(DIRECTORY tmux scripts
+  USE_SOURCE_PERMISSIONS
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  )
+
+install(DIRECTORY scripts/
+  USE_SOURCE_PERMISSIONS
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
+
+install(DIRECTORY ./
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  FILES_MATCHING PATTERN "*.xml"
   )

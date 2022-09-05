@@ -19,7 +19,7 @@ windows:
   - tf_connector:
       layout: tiled
       panes:
-        - waitForSimulation; roslaunch mrs_uav_odometry tf_connector.launch custom_config:=./custom_configs/tf_connector.yaml
+        - waitForSimulation; roslaunch tf_connector tf_connector.launch custom_config:=./custom_configs/tf_connector.yaml
   - control:
       layout: tiled
       panes:

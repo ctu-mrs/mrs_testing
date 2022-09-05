@@ -5,17 +5,18 @@ constraints: [
   "even",
   "insane",
   "darpa",
+  "darpa_con",
 ]
 
 constraint_management:
 
   allowed_constraints:
 
-    GPS: ["slow", "medium", "fast", "insane", "darpa", "even"]
+    GPS: ["slow", "medium", "fast", "insane", "darpa", "even", "darpa_con"]
 
   fallback_constraints:
 
-    GPS: "fast"
+    GPS: "darpa_con"
 
 even:
 
@@ -86,6 +87,41 @@ insane:
     yaw: 10.0
 
   tilt: deg(90)
+
+darpa_con:
+
+  horizontal:
+    speed: 5.0
+    acceleration: 4.0
+    jerk: 20.0
+    snap: 20.0
+
+  vertical:
+
+    ascending:
+      speed: 4.0
+      acceleration: 4.0
+      jerk: 20.0
+      snap: 20.0
+
+    descending:
+      speed: 4.0
+      acceleration: 4.0
+      jerk: 20.0
+      snap: 20.0
+
+  heading:
+    speed: 2.0
+    acceleration: 2.0
+    jerk: 10.0
+    snap: 10.0
+
+  angular_speed:
+    roll: 60.0
+    pitch: 60.0
+    yaw: 10.0
+
+  tilt: deg(60)
 
 darpa:
 

@@ -39,3 +39,10 @@ uav6:
   y: 0.0
   z: 0.5
   heading: 0.0
+
+uav7:
+  id: 7
+  x: 35.0
+  y: 3.0
+  z: 0.5
+  heading: 0.0

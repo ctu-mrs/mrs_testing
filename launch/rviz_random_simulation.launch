@@ -1,0 +1,13 @@
+<launch>
+
+  <arg name="UAV_NAME" default="$(env UAV_NAME)"/>
+
+  <group>
+    <node pkg="mrs_uav_testing" type="random_simulation.sh" name="anyname" output="screen">
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d /tmp/default_random_simulation.rviz" launch-prefix="bash -c 'sleep 1; $0 $@' ">
+    </node>
+  </group>
+
+</launch>

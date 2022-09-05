@@ -25,6 +25,7 @@ windows:
         - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "4 --x500 --enable-rangefinder --enable-ground-truth --pos_file `pwd`/init_pos.yaml"
         - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "5 --t650 --enable-rangefinder --enable-ground-truth --pos_file `pwd`/init_pos.yaml"
         - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "6 --eaglemk2 --enable-rangefinder --model-package eagle_gazebo_resources --enable-ground-truth --pos_file `pwd`/init_pos.yaml"
+        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "7 --brus --enable-rangefinder --model-package brus_gazebo_resources --enable-ground-truth --pos_file `pwd`/init_pos.yaml"
   - control:
       layout: tiled
       panes:
@@ -33,7 +34,8 @@ windows:
         - export UAV_TYPE=f550; export UAV_NAME=uav3; waitForOdometry; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_mpc_tracker:=./custom_configs/mpc_tracker.yaml
         - export UAV_TYPE=x500; export UAV_NAME=uav4; waitForOdometry; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_mpc_tracker:=./custom_configs/mpc_tracker.yaml
         - export UAV_TYPE=t650; export UAV_NAME=uav5; waitForOdometry; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_mpc_tracker:=./custom_configs/mpc_tracker.yaml
-        - export UAV_TYPE=eaglemk2; export UAV_NAME=uav6; waitForOdometry; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_mpc_tracker:=./custom_configs/mpc_tracker.yaml
+        - export UAV_TYPE=brus; export UAV_NAME=uav6; waitForOdometry; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_mpc_tracker:=./custom_configs/mpc_tracker.yaml
+        - export UAV_TYPE=brus; export UAV_NAME=uav7; waitForOdometry; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_mpc_tracker:=./custom_configs/mpc_tracker.yaml
   - flip:
       layout: tiled
       synchronize: after
@@ -50,6 +52,8 @@ windows:
           history -s rosservice call /uav5/control_manager/switch_tracker FlipTracker'
         - 'history -s rosservice call /uav6/control_manager/flip_tracker/flip;
           history -s rosservice call /uav6/control_manager/switch_tracker FlipTracker'
+        - 'history -s rosservice call /uav7/control_manager/flip_tracker/flip;
+          history -s rosservice call /uav7/control_manager/switch_tracker FlipTracker'
   - automatic_start:
       layout: tiled
       panes:
@@ -59,6 +63,7 @@ windows:
         - export UAV_NAME=uav4; waitForSimulation; roslaunch mrs_uav_general automatic_start.launch
         - export UAV_NAME=uav5; waitForSimulation; roslaunch mrs_uav_general automatic_start.launch
         - export UAV_NAME=uav6; waitForSimulation; roslaunch mrs_uav_general automatic_start.launch
+        - export UAV_NAME=uav7; waitForSimulation; roslaunch mrs_uav_general automatic_start.launch
   - takeoff:
       layout: tiled
       panes:
@@ -92,3 +97,19 @@ windows:
           rosservice call /$UAV_NAME/mavros/cmd/arming 1;
           sleep 2;
           rosservice call /$UAV_NAME/mavros/set_mode 0 offboard'
+        - 'export UAV_NAME=uav7;
+          waitForControl;
+          rosservice call /$UAV_NAME/mavros/cmd/arming 1;
+          sleep 2;
+          rosservice call /$UAV_NAME/mavros/set_mode 0 offboard'
+  - goto:
+      layout: tiled
+      synchronize: after
+      panes:
+        - 'export UAV_NAME=uav1; history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 0.0, 5.0, 0.0\]\"'
+        - 'export UAV_NAME=uav2; history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 0.0, 5.0, 0.0\]\"'
+        - 'export UAV_NAME=uav3; history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 0.0, 5.0, 0.0\]\"'
+        - 'export UAV_NAME=uav4; history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 0.0, 5.0, 0.0\]\"'
+        - 'export UAV_NAME=uav5; history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 0.0, 5.0, 0.0\]\"'
+        - 'export UAV_NAME=uav6; history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 0.0, 5.0, 0.0\]\"'
+        - 'export UAV_NAME=uav7; history -s rosservice call /$UAV_NAME/control_manager/goto \"goal: \[0.0, 0.0, 5.0, 0.0\]\"'
