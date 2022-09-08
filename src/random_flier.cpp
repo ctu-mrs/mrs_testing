@@ -157,11 +157,11 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
   auto [cmd_x, cmd_y, cmd_z]                   = mrs_lib::getPosition(sh_position_cmd_.getMsg());
 
   // if the uav reach the previousy set destination
-  if ((ros::Time::now() - last_successfull_command_).toSec() > 1.0 && fabs(cmd_speed_x) < 0.01 && fabs(cmd_speed_y) < 0.01) {
+  if ((ros::Time::now() - last_successfull_command_).toSec() > 3.0 && fabs(cmd_speed_x) < 0.01 && fabs(cmd_speed_y) < 0.01) {
 
     // create new point to fly to
     mrs_msgs::ReferenceStampedSrv new_point;
-    new_point.request.header.frame_id = "slam_mapping_origin";
+    new_point.request.header.frame_id = "liosam_mapping_origin";
 
     double dist, direction, heading, height;
 
@@ -189,8 +189,9 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
     /*   } */
     /* } */
 
-    double transfer_p = randd(0, 100);
-    double random_y   = randd(-10, 10);
+    double transfer_p      = randd(0, 100);
+    double transfer_p_side = randd(0, 100);
+    double random_y        = randd(-10, 10);
 
     while (true) {
 
@@ -198,8 +199,13 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
         new_point.request.reference.position.x = cmd_x + cos(direction) * dist;
         new_point.request.reference.position.y = cmd_y + sin(direction) * dist;
       } else {
-        new_point.request.reference.position.x = 10;
-        new_point.request.reference.position.y = random_y;
+        if (transfer_p_side > 50) {
+          new_point.request.reference.position.x = 10;
+          new_point.request.reference.position.y = 10;
+        } else {
+          new_point.request.reference.position.x = 10;
+          new_point.request.reference.position.y = -10;
+        }
       }
       new_point.request.reference.position.z = height;
       new_point.request.reference.heading    = heading;
@@ -208,8 +214,8 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
         if (new_point.response.success) {
 
-          ROS_INFO("New goal: %.2f %.2f %.2f", new_point.request.reference.position.x, new_point.request.reference.position.y,
-                   new_point.request.reference.position.z);
+          ROS_INFO("New goal: %.2f %.2f %.2f, heading: %.3f, frame_id: %s", new_point.request.reference.position.x, new_point.request.reference.position.y,
+                   new_point.request.reference.position.z, new_point.request.reference.heading, new_point.request.header.frame_id.c_str());
 
           last_successfull_command_ = ros::Time::now();
           break;
