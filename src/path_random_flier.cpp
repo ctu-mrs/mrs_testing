@@ -44,11 +44,11 @@ private:
 
   bool checkReference(const std::string frame, const double x, const double y, const double z, const double hdg);
 
-  mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>           sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>           sh_position_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
   mrs_lib::SubscribeHandler<mrs_msgs::MpcPredictionFullState>    sh_mpc_predition_;
 
-  std::optional<mrs_msgs::PositionCommand> transformPositionCmd(const mrs_msgs::PositionCommand& position_cmd, const std::string& target_frame);
+  std::optional<mrs_msgs::TrackerCommand> transformPositionCmd(const mrs_msgs::TrackerCommand& position_cmd, const std::string& target_frame);
 
   std::shared_ptr<mrs_lib::Transformer> transformer_;
 
@@ -159,7 +159,7 @@ void PathRandomFlier::onInit(void) {
   shopts.no_message_timeout = mrs_lib::no_timeout;
   shopts.threadsafe         = true;
 
-  sh_position_cmd_         = mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>(shopts, "position_command_in");
+  sh_position_cmd_         = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "position_command_in");
   sh_control_manager_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics>(shopts, "control_manager_diag_in");
   sh_mpc_predition_        = mrs_lib::SubscribeHandler<mrs_msgs::MpcPredictionFullState>(shopts, "mpc_prediction_in");
 
@@ -226,7 +226,7 @@ void PathRandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
   if (!sh_position_cmd_.hasMsg()) {
 
-    ROS_INFO_THROTTLE(1.0, "waiting for PositionCommand");
+    ROS_INFO_THROTTLE(1.0, "waiting for TrackerCommand");
     return;
   }
 
@@ -471,7 +471,7 @@ bool PathRandomFlier::checkReference(const std::string frame, const double x, co
 
 /* transformPositionCmd() //{ */
 
-std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(const mrs_msgs::PositionCommand& position_cmd, const std::string& target_frame) {
+std::optional<mrs_msgs::TrackerCommand> PathRandomFlier::transformPositionCmd(const mrs_msgs::TrackerCommand& position_cmd, const std::string& target_frame) {
 
   // if we transform to the current control frame, which is in fact the same frame as the position_cmd is in
   if (target_frame == "") {
@@ -487,7 +487,7 @@ std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(c
     return {};
   }
 
-  mrs_msgs::PositionCommand cmd_out;
+  mrs_msgs::TrackerCommand cmd_out;
 
   cmd_out.header.stamp    = tf.value().header.stamp;
   cmd_out.header.frame_id = transformer_->frame_to(tf.value());

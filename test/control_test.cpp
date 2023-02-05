@@ -14,7 +14,7 @@
 #include <mrs_msgs/Vec4.h>
 #include <mrs_msgs/Vec1.h>
 #include <mrs_msgs/String.h>
-#include <mrs_msgs/PositionCommand.h>
+#include <mrs_msgs/TrackerCommand.h>
 #include <mrs_msgs/ControlManagerDiagnostics.h>
 #include <mrs_msgs/SpawnerDiagnostics.h>
 
@@ -153,7 +153,7 @@ private:
 
   mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>        sh_spawner_diag_;
   mrs_lib::SubscribeHandler<nav_msgs::Odometry>                  sh_odometry_;
-  mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>           sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>           sh_position_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
 
   // | ----------------------- publishers ----------------------- |
@@ -350,7 +350,7 @@ ControlTest::ControlTest() {
 
   sh_spawner_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>(shopts, "spawner_diagnostics_in");
 
-  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>(shopts, "position_command_in");
+  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "position_command_in");
 
   sh_control_manager_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics>(shopts, "control_manager_diagnostics_in");
 

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <mrs_msgs/PositionCommand.h>
+#include <mrs_msgs/TrackerCommand.h>
 #include <mrs_msgs/ReferenceStampedSrv.h>
 #include <std_srvs/Trigger.h>
 
@@ -36,7 +36,7 @@ private:
   void   timerMain(const ros::TimerEvent& event);
   double randd(double from, double to);
 
-  mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand> sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand> sh_position_cmd_;
 
   ros::ServiceServer service_server_activate_;
 
@@ -89,7 +89,7 @@ void RandomFlier::onInit(void) {
   shopts.threadsafe         = true;
   shopts.transport_hints    = ros::TransportHints().tcpNoDelay();
 
-  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>(shopts, "position_command_in");
+  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "position_command_in");
 
   service_server_activate_  = nh_.advertiseService("activate_in", &RandomFlier::callbackActivate, this);
   service_client_reference_ = nh_.serviceClient<mrs_msgs::ReferenceStampedSrv>("reference_out");
@@ -149,7 +149,7 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
   if (!sh_position_cmd_.hasMsg()) {
 
-    ROS_INFO_THROTTLE(1.0, "[RandomFlier]: waiting for PositionCommand");
+    ROS_INFO_THROTTLE(1.0, "[RandomFlier]: waiting for TrackerCommand");
     return;
   }
 

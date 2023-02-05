@@ -8,7 +8,7 @@
 
 #include <mrs_msgs/Vec4.h>
 #include <mrs_msgs/TrajectoryReferenceSrv.h>
-#include <mrs_msgs/PositionCommand.h>
+#include <mrs_msgs/TrackerCommand.h>
 
 #include <mrs_lib/param_loader.h>
 #include <mrs_lib/subscribe_handler.h>
@@ -38,7 +38,7 @@ private:
   double randd(double from, double to);
   bool   setTrajectorySrv(const mrs_msgs::TrajectoryReference trajectory);
 
-  mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand> sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand> sh_position_cmd_;
 
   ros::Publisher publisher_goto_;
 
@@ -98,7 +98,7 @@ void TrajectoryRandomFlier::onInit(void) {
   shopts.no_message_timeout = mrs_lib::no_timeout;
   shopts.threadsafe         = true;
 
-  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>(shopts, "position_command_in");
+  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "position_command_in");
 
   service_server_activate_   = nh_.advertiseService("activate_in", &TrajectoryRandomFlier::callbackActivate, this);
   service_client_trajectory_ = nh_.serviceClient<mrs_msgs::TrajectoryReferenceSrv>("trajectory_reference_out");
@@ -158,7 +158,7 @@ void TrajectoryRandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& ev
 
   if (!sh_position_cmd_.hasMsg()) {
 
-    ROS_INFO_THROTTLE(1.0, "waiting for PositionCommand");
+    ROS_INFO_THROTTLE(1.0, "waiting for TrackerCommand");
     return;
   }
 
