@@ -19,7 +19,7 @@
   <depend>mrs_lib</depend>
   <depend>std_srvs</depend>
   <depend>std_msgs</depend>
-  <depend>mavros_msgs</depend>
+  <depend>rostest</depend>
   <depend>dynamic_reconfigure</depend>
 
   <test_depend>rostest</test_depend>

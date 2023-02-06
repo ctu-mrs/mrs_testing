@@ -50,8 +50,8 @@
       <remap from="~set_heading_relative_out" to="control_manager/set_heading_relative" />
       <remap from="~switch_tracker_out" to="control_manager/switch_tracker" />
       <remap from="~motors_out" to="control_manager/motors" />
-      <remap from="~arm_out" to="mavros/cmd/arming" />
-      <remap from="~offboard_out" to="mavros/set_mode" />
+      <remap from="~arm_out" to="hw_api/arm" />
+      <remap from="~offboard_out" to="hw_api/offboard" />
       <remap from="~takeoff_out" to="uav_manager/takeoff" />
       <remap from="~land_out" to="uav_manager/land" />
       <remap from="~land_home_out" to="uav_manager/land_home" />

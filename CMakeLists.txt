@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   std_msgs
   std_srvs
-  mavros_msgs
   dynamic_reconfigure
   rostest
   )
@@ -30,7 +29,7 @@ set(EXECUTABLES
   )
 
 catkin_package(
-  CATKIN_DEPENDS nav_msgs mrs_lib std_msgs std_srvs mavros_msgs
+  CATKIN_DEPENDS roscpp nodelet nav_msgs mrs_lib std_msgs std_srvs mrs_msgs dynamic_reconfigure rostest
   LIBRARIES ${LIBRARIES}
   )
 

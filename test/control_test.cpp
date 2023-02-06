@@ -20,9 +20,6 @@
 
 #include <nav_msgs/Odometry.h>
 
-#include <mavros_msgs/CommandBool.h>
-#include <mavros_msgs/SetMode.h>
-
 #include <mutex>
 
 #include <mrs_lib/mutex.h>
@@ -153,7 +150,7 @@ private:
 
   mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>        sh_spawner_diag_;
   mrs_lib::SubscribeHandler<nav_msgs::Odometry>                  sh_odometry_;
-  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>           sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>            sh_position_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
 
   // | ----------------------- publishers ----------------------- |
@@ -366,8 +363,8 @@ ControlTest::ControlTest() {
 
   service_client_switch_tracker_ = nh_.serviceClient<mrs_msgs::String>("switch_tracker_out");
   service_client_motors_         = nh_.serviceClient<std_srvs::SetBool>("motors_out");
-  service_client_arm_            = nh_.serviceClient<mavros_msgs::CommandBool>("arm_out");
-  service_client_offboard_       = nh_.serviceClient<mavros_msgs::SetMode>("offboard_out");
+  service_client_arm_            = nh_.serviceClient<std_srvs::SetBool>("arm_out");
+  service_client_offboard_       = nh_.serviceClient<std_srvs::SetBool>("offboard_out");
   service_client_takeoff_        = nh_.serviceClient<std_srvs::Trigger>("takeoff_out");
   service_client_land_           = nh_.serviceClient<std_srvs::Trigger>("land_out");
   service_client_land_home_      = nh_.serviceClient<std_srvs::Trigger>("land_home_out");
@@ -873,8 +870,8 @@ void ControlTest::changeState(const ControlState_t new_state) {
   mrs_msgs::Vec4                goal_vec4;
   mrs_msgs::Vec1                goal_vec1;
   std_srvs::SetBool             goal_bool;
-  mavros_msgs::CommandBool      goal_mavros_commandbool;
-  mavros_msgs::SetMode          goal_mavros_set_mode;
+  std_srvs::SetBool             srv_arming;
+  std_srvs::SetBool             srv_offboard;
   std_srvs::Trigger             goal_trigger;
   mrs_msgs::Reference           trajectory_point;
 
@@ -937,13 +934,12 @@ void ControlTest::changeState(const ControlState_t new_state) {
       wait.sleep();
 
       // | ------------------------- arming ------------------------- |
-      goal_mavros_commandbool.request.value = 1;
-      service_client_arm_.call(goal_mavros_commandbool);
+      srv_arming.request.data = true;
+      service_client_arm_.call(srv_arming);
 
       // | ------------------------ offboard ------------------------ |
-      goal_mavros_set_mode.request.base_mode   = 0;
-      goal_mavros_set_mode.request.custom_mode = "offboard";
-      service_client_offboard_.call(goal_mavros_set_mode);
+      srv_offboard.request.data = true;
+      service_client_offboard_.call(srv_offboard);
 
       wait.sleep();
 
