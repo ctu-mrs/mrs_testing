@@ -11,6 +11,10 @@ windows:
       layout: tiled
       panes:
         - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
+  - hw_api:
+      layout: tiled
+      panes:
+        - waitForRos; roslaunch mrs_uav_hw_api api.launch custom_config:=`rospack find mrs_uav_px4_api`/config/px4_api.yaml
   - rviz:
       layout: tiled
       panes:

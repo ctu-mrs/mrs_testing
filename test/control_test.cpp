@@ -150,7 +150,7 @@ private:
 
   mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>        sh_spawner_diag_;
   mrs_lib::SubscribeHandler<nav_msgs::Odometry>                  sh_odometry_;
-  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>            sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>            sh_tracker_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
 
   // | ----------------------- publishers ----------------------- |
@@ -347,7 +347,7 @@ ControlTest::ControlTest() {
 
   sh_spawner_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>(shopts, "spawner_diagnostics_in");
 
-  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "position_command_in");
+  sh_tracker_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "tracker_cmd_in");
 
   sh_control_manager_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics>(shopts, "control_manager_diagnostics_in");
 
@@ -677,7 +677,7 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
     case TRAJECTORY_CIRCLE_LOOP: {
 
-      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
       if ((ros::Time::now() - looping_start_time_).toSec() > _looping_circle_duration_) {
         if (mrs_lib::geometry::dist(vec3_t(odom_x, odom_y, odom_z), vec3_t(cmd_x, cmd_y, cmd_z)) < 2.0) {
@@ -708,7 +708,7 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
     case TRAJECTORY_CIRCLE_POST_PAUSE: {
 
-      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
       if ((ros::Time::now() - looping_start_time_).toSec() > 20.0) {
         if (mrs_lib::geometry::dist(vec3_t(odom_x, odom_y, odom_z), vec3_t(cmd_x, cmd_y, cmd_z)) < 2.0) {
@@ -789,11 +789,11 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
   if (current_state_ >= SET_REFERENCE_TOPIC_STATE) {
 
-    auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+    auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
     double cmd_heading = 0;
     try {
-      cmd_heading = mrs_lib::getHeading(sh_position_cmd_.getMsg());
+      cmd_heading = mrs_lib::getHeading(sh_tracker_cmd_.getMsg());
     }
     catch (mrs_lib::AttitudeConverter::GetHeadingException e) {
       ROS_ERROR_THROTTLE(1.0, "[ControlTest]: exception caught: '%s'", e.what());
@@ -881,10 +881,10 @@ void ControlTest::changeState(const ControlState_t new_state) {
 
   if (current_state_ > TAKEOFF_STATE) {
 
-    std::tie(cmd_x, cmd_y, cmd_z) = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+    std::tie(cmd_x, cmd_y, cmd_z) = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
     try {
-      cmd_heading = mrs_lib::getHeading(sh_position_cmd_.getMsg());
+      cmd_heading = mrs_lib::getHeading(sh_tracker_cmd_.getMsg());
     }
     catch (mrs_lib::AttitudeConverter::GetHeadingException e) {
       ROS_ERROR_THROTTLE(1.0, "[ControlTest]: exception caught: '%s'", e.what());
