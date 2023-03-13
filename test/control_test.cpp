@@ -166,7 +166,7 @@ private:
   ros::ServiceClient service_client_takeoff_;
   ros::ServiceClient service_client_land_;
   ros::ServiceClient service_client_land_home_;
-  ros::ServiceClient service_client_motors_;
+  ros::ServiceClient service_client_toggle_control_output_;
   ros::ServiceClient service_client_set_reference_;
   ros::ServiceClient service_client_goto_;
   ros::ServiceClient service_client_goto_relative_;
@@ -361,13 +361,13 @@ ControlTest::ControlTest() {
 
   // | ---------------- takeoff/landing services ---------------- |
 
-  service_client_switch_tracker_ = nh_.serviceClient<mrs_msgs::String>("switch_tracker_out");
-  service_client_motors_         = nh_.serviceClient<std_srvs::SetBool>("motors_out");
-  service_client_arm_            = nh_.serviceClient<std_srvs::SetBool>("arm_out");
-  service_client_offboard_       = nh_.serviceClient<std_srvs::Trigger>("offboard_out");
-  service_client_takeoff_        = nh_.serviceClient<std_srvs::Trigger>("takeoff_out");
-  service_client_land_           = nh_.serviceClient<std_srvs::Trigger>("land_out");
-  service_client_land_home_      = nh_.serviceClient<std_srvs::Trigger>("land_home_out");
+  service_client_switch_tracker_        = nh_.serviceClient<mrs_msgs::String>("switch_tracker_out");
+  service_client_toggle_control_output_ = nh_.serviceClient<std_srvs::SetBool>("toggle_control_output_out");
+  service_client_arm_                   = nh_.serviceClient<std_srvs::SetBool>("arm_out");
+  service_client_offboard_              = nh_.serviceClient<std_srvs::Trigger>("offboard_out");
+  service_client_takeoff_               = nh_.serviceClient<std_srvs::Trigger>("takeoff_out");
+  service_client_land_                  = nh_.serviceClient<std_srvs::Trigger>("land_out");
+  service_client_land_home_             = nh_.serviceClient<std_srvs::Trigger>("land_home_out");
 
   // | ----------- control manager reference interface ---------- |
 
@@ -927,9 +927,9 @@ void ControlTest::changeState(const ControlState_t new_state) {
 
       /* //{ test the full takeoff sequence */
 
-      // | ------------------------- motors ------------------------- |
+      // | --------------------- control output --------------------- |
       goal_bool.request.data = 1;
-      service_client_motors_.call(goal_bool);
+      service_client_toggle_control_output_.call(goal_bool);
 
       wait.sleep();
 
