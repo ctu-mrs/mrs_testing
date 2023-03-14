@@ -34,4 +34,4 @@ looping_circle_trajectory:
 
 switch_estimator_after_takeoff:
   active: false
-  target_estimator: "GPS"
+  target_estimator: "gps_garmin"
