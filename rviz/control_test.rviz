@@ -50,7 +50,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 100
-      Reference Frame: uav1/gps_origin
+      Reference Frame: uav1/world_origin
       Value: true
     - Alpha: 0.5
       Cell Size: 5
@@ -68,7 +68,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 100
-      Reference Frame: uav1/gps_origin
+      Reference Frame: uav1/world_origin
       Value: true
     - Class: rviz/TF
       Enabled: false
@@ -329,7 +329,7 @@ Visualization Manager:
   Global Options:
     Background Color: 255; 255; 255
     Default Light: true
-    Fixed Frame: uav1/gps_origin
+    Fixed Frame: uav1/world_origin
     Frame Rate: 60
   Name: root
   Tools:
