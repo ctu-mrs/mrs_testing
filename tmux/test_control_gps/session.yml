@@ -7,7 +7,6 @@ windows:
       layout: tiled
       panes:
         - roscore
-        - rosparam set use_sim_time true
   - gazebo:
       layout: tiled
       panes:
