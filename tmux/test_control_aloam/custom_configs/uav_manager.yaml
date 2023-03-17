@@ -1,3 +1,6 @@
 takeoff:
   after_takeoff:
     controller: Se3Controller
+
+landing:
+  disarm: true
