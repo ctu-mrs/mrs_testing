@@ -9,11 +9,11 @@ constraint_management:
 
   allowed_constraints:
 
-    GPS: ["slow", "medium", "fast", "insane"]
+    gps_baro: ["slow", "medium", "fast", "insane"]
 
   fallback_constraints:
 
-    GPS: "insane"
+    gps_baro: "insane"
 
 insane:
 

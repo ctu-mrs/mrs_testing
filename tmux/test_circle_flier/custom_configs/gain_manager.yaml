@@ -2,7 +2,7 @@ gain_management:
 
   fallback_gains:
 
-    GPS: "tight"
+    gps_baro: "tight"
 
 tight:
 
