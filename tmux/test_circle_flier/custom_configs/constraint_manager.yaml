@@ -10,10 +10,12 @@ constraint_management:
   allowed_constraints:
 
     gps_baro: ["slow", "medium", "fast", "insane"]
+    ground_truth: ["slow", "medium", "fast", "insane"]
 
   fallback_constraints:
 
     gps_baro: "insane"
+    ground_truth: "insane"
 
 insane:
 
