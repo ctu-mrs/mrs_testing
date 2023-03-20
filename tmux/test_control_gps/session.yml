@@ -7,41 +7,41 @@ windows:
       layout: tiled
       panes:
         - roscore
-  - gazebo:
+  - mrs_simulator:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
-        # - waitForRos; export UAV_NAME=uav1; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
-  - hw_api:
-      layout: tiled
-      panes:
-        - waitForRos; roslaunch mrs_uav_hw_api api.launch custom_config:=`rospack find mrs_uav_px4_api`/config/px4_api.yaml
-        # - waitForRos; roslaunch mrs_uav_hw_api api.launch custom_config:=./custom_configs/hw_api_plugin.yaml
+        - waitForRos; export UAV_NAME=uav1; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
+        - waitForRos; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+  # - gazebo:
+  #     layout: tiled
+  #     panes:
+  #       - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
+  #       - waitForRos; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
   - rviz:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_uav_testing rviz.launch name:=control_test
-        - waitForRos; roslaunch mrs_rviz_plugins load_robot.launch
-        - waitForRos; roslaunch mrs_rviz_plugins rviz_interface.launch
+        - waitForHw; roslaunch mrs_uav_testing rviz.launch name:=control_test
+        - waitForHw; roslaunch mrs_rviz_plugins load_robot.launch
+        - waitForHw; roslaunch mrs_rviz_plugins rviz_interface.launch
   - status:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_uav_status status.launch
+        - waitForHw; roslaunch mrs_uav_status status.launch
   - control:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml config_active_estimators:=./custom_configs/active_estimators.yaml config_transform_manager:=./custom_configs/transform_manager.yaml
+        - waitForHw; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml config_active_estimators:=./custom_configs/active_estimators.yaml config_transform_manager:=./custom_configs/transform_manager.yaml
   - takeoff:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_uav_general automatic_start.launch
+        - waitForHw; roslaunch mrs_uav_general automatic_start.launch
         - 'waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2.0; rosservice call /$UAV_NAME/hw_api/offboard'
   - control_test:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_uav_testing control_test.launch custom_config:=./custom_configs/control_test.yaml
-  - gazebo_camera_follow:
+        - waitForHw; roslaunch mrs_uav_testing control_test.launch custom_config:=./custom_configs/control_test.yaml
+  - layout:
       layout: tiled
       panes:
-        - waitForOdometry; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
-        - waitForOdometry; ~/.i3/layout_manager.sh layout.json
+        - waitForControl; ~/.i3/layout_manager.sh layout.json
