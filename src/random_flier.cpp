@@ -161,7 +161,7 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
     // create new point to fly to
     mrs_msgs::ReferenceStampedSrv new_point;
-    new_point.request.header.frame_id = "gps_origin";
+    new_point.request.header.frame_id = "local_origin";
 
     double dist, direction, heading;
 

@@ -1,25 +1,3 @@
-spawn_args: "1 --f450 --enable-rangefinder --enable-rplidar --pos 0 0 0.3 0"
-
-max_xy: 6.0 # [m]
-min_xy: -6.0 # [m]
-
-min_z: 3.0 # [m]
-max_z: 5.0 # [m]
-
+spawn_args: "1 --enable-ground-truth --enable-rangefinder"
 test_line_tracker: false
-test_mpc_gotos: true
-
-line_trajectory:
-
-  p1: -5.0 # [m]
-  p2: 5.0 # [m]
-
-  speed: 2.0 # [m/s]
-
-  heading_rate: 0.2 # [rad/s]
-
-looping_circle_trajectory:
-
-  radius: 5.0 # [m]
-  speed: 2.0 # [m/s]
-  duration: 30.0 # [s]
+test_mpc_gotos: false

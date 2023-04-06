@@ -1,8 +1,8 @@
 # loaded state estimator plugins
 state_estimators: [
-"aloam",
-"gps_garmin",
-"ground_truth"
+  "gps_garmin",
+  # "gps_baro",
+  "ground_truth",
 ]
 
 initial_state_estimator: "gps_garmin" # will be used as the first state estimator

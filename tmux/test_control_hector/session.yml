@@ -1,34 +1,26 @@
 name: simulation
 root: ./
-pre_window: export UAV_NAME=uav1; export UAV_TYPE=f450; export ODOMETRY_TYPE=hector; export WORLD_FILE=./world.yaml; export PX4_SIM_SPEED_FACTOR=1.0; export SENSORS="garmin_down"
-startup_window: status
+pre_window: export UAV_NAME=uav1; export UAV_TYPE=f450; export WORLD_NAME=simulation_local; export PX4_SIM_SPEED_FACTOR=1.0; export SENSORS="garmin_down"
+startup_window: control
 windows:
-  - roscore:
-      layout: even-vertical
-      panes:
-        - roscore
+  # - roscore:
+  #     layout: even-vertical
+  #     panes:
+  #       - roscore
   - gazebo:
       layout: even-vertical
       panes:
         - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true world_file:='$(find mrs_uav_testing)/worlds/hector_test.world'
-  - rviz:
-      layout: even-vertical
-      panes:
-        - waitForSimulation; roslaunch mrs_uav_testing rviz.launch name:=hector_test
-        - waitForSimulation; roslaunch mrs_rviz_plugins load_robot.launch
-        - waitForSimulation; roslaunch mrs_rviz_plugins rviz_interface.launch
-  # - juggler:
-  #     layout: even-vertical
-  #     panes:
-  #       - waitForSimulation; rosrun plotjuggler PlotJuggler -l ../../plot_juggler/hector_test.xml
+        - waitForRos; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+        - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
   - status:
       layout: even-vertical
       panes:
-        - waitForOdometry; roslaunch mrs_uav_status status.launch
-  - bumper:
-      layout: tiled
+        - waitForRos; roslaunch mrs_uav_status status.launch
+  - spawn:
+      layout: even-vertical
       panes:
-        - waitForOdometry; roslaunch mrs_bumper bumper.launch
+        - waitForSimulation; sleep 5; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --enable-ground-truth --enable-rplidar --use-gpu-ray"
   - hector_slam:
       layout: even-vertical
       panes:
@@ -36,26 +28,31 @@ windows:
   - control:
       layout: even-vertical
       panes:
-        - waitForOdometry; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_control_manager:=./custom_configs/control_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml
-  # - random_flier:
-  #     layout: tiled
-  #     panes:
-  #       - waitForOdometry; roslaunch mrs_uav_testing random_flier.launch
-  #       # - waitForOdometry; roslaunch mrs_uav_testing trajectory_random_flier.launch
-  - control_test:
+        - waitForHw; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml config_active_estimators:=./custom_configs/active_estimators.yaml config_transform_manager:=./custom_configs/transform_manager.yaml
+  - random_flier:
       layout: tiled
       panes:
-        - waitForSimulation; roslaunch mrs_uav_testing control_test.launch custom_config:=./custom_configs/control_test.yaml
+        # - waitForRos; roslaunch mrs_uav_testing random_flier.launch custom_config:=./custom_configs/random_flier.yaml
+        # - waitForRos; roslaunch mrs_uav_testing trajectory_random_flier.launch
   - takeoff:
       layout: tiled
       panes:
-        - waitForSimulation; roslaunch mrs_uav_general automatic_start.launch
+        - waitForRos; roslaunch mrs_uav_general automatic_start.launch
         - 'waitForControl;
           rosservice call /$UAV_NAME/mavros/cmd/arming 1;
           sleep 0.1;
           rosservice call /$UAV_NAME/mavros/set_mode 0 offboard'
-  - gazebo_camera_follow:
+  - bumper:
       layout: even-vertical
       panes:
-        - waitForOdometry; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
-        - waitForControl; sleep 3; ~/.i3/layout_manager.sh layout.json
+        - waitForRos; roslaunch mrs_bumper bumper.launch
+  - rviz:
+      layout: even-vertical
+      panes:
+        - waitForRos; roslaunch mrs_uav_testing rviz.launch name:=hector_test
+        - waitForRos; roslaunch mrs_rviz_plugins load_robot.launch
+        - waitForRos; roslaunch mrs_rviz_plugins rviz_interface.launch
+  - layout:
+      layout: even-vertical
+      panes:
+        - waitForRos; sleep 3; ~/.i3/layout_manager.sh layout.json

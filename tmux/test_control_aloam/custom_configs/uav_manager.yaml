@@ -1,6 +1,7 @@
 takeoff:
   after_takeoff:
-    controller: Se3Controller
+    controller: MpcController
+  takeoff_height: 1.5
 
 landing:
   disarm: true

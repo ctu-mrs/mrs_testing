@@ -1,0 +1,53 @@
+name: simulation
+root: ./
+pre_window: export UAV_NAME=uav2; export RUN_TYPE=simulation; export UAV_TYPE=x500; export WORLD_NAME=simulation; export SENSORS="garmin_down"; export LOGGER_DEBUG=false; export DEBUG=false; export STANDALONE=false
+startup_window: control
+windows:
+  - roscore:
+      layout: tiled
+      panes:
+        - roscore
+  - simulator:
+      layout: tiled
+      panes:
+        - waitForRos; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
+  - hw_api:
+      layout: tiled
+      panes:
+        - export UAV_NAME="uav2"; waitForRos; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api.yaml
+        - export UAV_NAME="uav3"; waitForRos; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api.yaml
+  - automaticstart:
+      layout: tiled
+      panes:
+        - export UAV_NAME="uav2"; waitForHw; roslaunch mrs_uav_general automatic_start.launch
+        - export UAV_NAME="uav3"; waitForHw; roslaunch mrs_uav_general automatic_start.launch
+  - takeoff:
+      layout: tiled
+      panes:
+        - export UAV_NAME="uav2"; waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2; rosservice call /$UAV_NAME/hw_api/offboard
+        - export UAV_NAME="uav3"; waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2; rosservice call /$UAV_NAME/hw_api/offboard
+  - status:
+      layout: tiled
+      panes:
+        - export UAV_NAME="uav2"; waitForHw; roslaunch mrs_uav_status status.launch
+        - export UAV_NAME="uav3"; waitForHw; roslaunch mrs_uav_status status.launch
+  - control:
+      layout: tiled
+      panes:
+        - export UAV_NAME="uav2"; waitForHw; ulimit -c unlimited; roslaunch mrs_uav_general core.launch config_mpc_tracker:=./custom_configs/mpc_tracker.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_active_estimators:=./custom_configs/active_estimators.yaml
+        - export UAV_NAME="uav3"; waitForHw; ulimit -c unlimited; roslaunch mrs_uav_general core.launch config_mpc_tracker:=./custom_configs/mpc_tracker.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_active_estimators:=./custom_configs/active_estimators.yaml
+  - mvl_server:
+      layout: tiled
+      panes:
+        - waitForRos; roslaunch mvl_formation_controller server.launch
+  - mvl_robots:
+      layout: tiled
+      panes:
+        - export UAV_NAME="uav2"; waitForHw; roslaunch mvl_formation_controller robot.launch
+        - export UAV_NAME="uav3"; waitForHw; roslaunch mvl_formation_controller robot.launch
+  - rviz:
+      layout: tiled
+      panes:
+        - waitForControl; rosrun rviz rviz -d ./rviz.rviz
+        - waitForControl; roslaunch mrs_rviz_plugins load_robot.launch
+        - waitForControl; waitForControl; roslaunch mrs_rviz_plugins rviz_interface.launch
