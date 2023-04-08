@@ -1,5 +1,5 @@
 publisher:
-  active: false
+  active: true
   rate: 30 # [Hz]
 
 radius: 5.0 # [m]
