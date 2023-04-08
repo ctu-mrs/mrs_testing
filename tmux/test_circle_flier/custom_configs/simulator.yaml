@@ -1,5 +1,6 @@
-clock_rate: 250
-realtime_factor: 1.0
+simulation_rate: 250.0 # Hz
+clock_rate: 250.0 # Hz
+realtime_factor: 1.0 # [-]
 
 iterate_without_input: true
 
@@ -11,7 +12,7 @@ uav_names: [
 ]
 
 uav1:
-  type: "x500"
+  type: "t650"
   spawn:
     x: 0.0
     y: 0.0
