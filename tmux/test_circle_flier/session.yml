@@ -7,18 +7,18 @@ windows:
       layout: tiled
       panes:
         - roscore
-  - mrs_simulator:
-      layout: tiled
-      panes:
-        - waitForRos; export UAV_NAME=uav1; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
-        - waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  # - gazebo:
+  # - mrs_simulator:
   #     layout: tiled
   #     panes:
-  #       - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
-  #       - waitForRos; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-  #       - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1; exit
-  #       - read; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --enable-ground-truth"
+  #       - waitForRos; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
+  #       - waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+  - gazebo:
+      layout: tiled
+      panes:
+        - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
+        - waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+        - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1; exit
+        - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --enable-ground-truth"
   - status:
       layout: tiled
       panes:

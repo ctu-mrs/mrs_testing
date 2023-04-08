@@ -8,8 +8,8 @@ Panels:
         - /TF1/Frames1
         - /TF1/Tree1
         - /uav11/Odometry1/odom_main1/Shape1
-      Splitter Ratio: 0.4735293984413147
-    Tree Height: 471
+      Splitter Ratio: 0.4941176474094391
+    Tree Height: 813
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -25,7 +25,6 @@ Panels:
     Name: Views
     Splitter Ratio: 0.5
   - Class: rviz/Time
-    Experimental: false
     Name: Time
     SyncMode: 0
     SyncSource: ""
@@ -52,7 +51,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 100
-      Reference Frame: uav1/local_origin
+      Reference Frame: common_origin
       Value: true
     - Alpha: 0.5
       Cell Size: 5
@@ -70,114 +69,23 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 100
-      Reference Frame: uav1/local_origin
+      Reference Frame: common_origin
       Value: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        base_link:
-          Value: true
-        base_link_frd:
-          Value: true
-        common_origin:
-          Value: true
-        map:
-          Value: true
-        map_ned:
-          Value: true
-        odom:
-          Value: true
-        odom_ned:
-          Value: true
-        uav1/fcu:
-          Value: true
-        uav1/fcu_untilted:
-          Value: false
-        uav1/garmin:
-          Value: false
-        uav1/gps_origin:
-          Value: false
-        uav1/local_origin:
-          Value: false
-        uav1/stable_origin:
-          Value: false
-        uav1/utm_origin:
-          Value: false
-        uav2/fcu:
-          Value: true
-        uav2/fcu_untilted:
-          Value: false
-        uav2/garmin:
-          Value: false
-        uav2/gps_origin:
-          Value: false
-        uav2/local_origin:
-          Value: false
-        uav2/stable_origin:
-          Value: false
-        uav2/utm_origin:
-          Value: false
-        uav3/fcu:
-          Value: true
-        uav3/fcu_untilted:
-          Value: false
-        uav3/garmin:
-          Value: false
-        uav3/gps_origin:
-          Value: false
-        uav3/local_origin:
-          Value: false
-        uav3/stable_origin:
-          Value: false
-        uav3/utm_origin:
-          Value: false
+      Marker Alpha: 1
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        common_origin:
-          uav1/fcu:
-            uav1/fcu_untilted:
-              {}
-            uav1/garmin:
-              {}
-            uav1/gps_origin:
-              uav1/utm_origin:
-                {}
-            uav1/local_origin:
-              {}
-            uav1/stable_origin:
-              {}
-          uav2/fcu:
-            uav2/fcu_untilted:
-              {}
-            uav2/garmin:
-              {}
-            uav2/gps_origin:
-              uav2/utm_origin:
-                {}
-            uav2/local_origin:
-              {}
-            uav2/stable_origin:
-              {}
-          uav3/fcu:
-            uav3/fcu_untilted:
-              {}
-            uav3/garmin:
-              {}
-            uav3/gps_origin:
-              uav3/utm_origin:
-                {}
-            uav3/local_origin:
-              {}
-            uav3/stable_origin:
-              {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Class: rviz/Group
       Displays:
         - Class: rviz/Group
@@ -227,6 +135,7 @@ Visualization Manager:
               Keep: 1
               Name: cmd_odom
               Position Tolerance: 0.009999999776482582
+              Queue Size: 10
               Shape:
                 Alpha: 1
                 Axes Length: 1
@@ -265,6 +174,7 @@ Visualization Manager:
               Keep: 1
               Name: position_cmd
               Position Tolerance: 0.009999999776482582
+              Queue Size: 10
               Shape:
                 Alpha: 1
                 Axes Length: 1
@@ -299,6 +209,7 @@ Visualization Manager:
               Keep: 1
               Name: odom_main
               Position Tolerance: 0.10000000149011612
+              Queue Size: 10
               Shape:
                 Alpha: 1
                 Axes Length: 3
@@ -309,7 +220,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav1/odometry/odom_main
+              Topic: /uav1/estimation_manager/odom_main
               Unreliable: true
               Value: true
           Enabled: true
@@ -326,6 +237,7 @@ Visualization Manager:
               Head Length: 0.07000000029802322
               Head Radius: 0.029999999329447746
               Name: MpcPredictionTrajectory
+              Queue Size: 10
               Shaft Length: 0.23000000417232513
               Shaft Radius: 0.009999999776482582
               Shape: Arrow (Flat)
@@ -353,6 +265,7 @@ Visualization Manager:
               Keep: 1
               Name: MpcTrackerReference
               Position Tolerance: 0.0010000000474974513
+              Queue Size: 10
               Shape:
                 Alpha: 1
                 Axes Length: 1
@@ -376,6 +289,7 @@ Visualization Manager:
               Head Length: 0.07000000029802322
               Head Radius: 0.029999999329447746
               Name: MpcInnerReference
+              Queue Size: 10
               Shaft Length: 0.23000000417232513
               Shaft Radius: 0.009999999776482582
               Shape: Axes
@@ -394,6 +308,7 @@ Visualization Manager:
                   Head Length: 0.07000000029802322
                   Head Radius: 0.029999999329447746
                   Name: Poses
+                  Queue Size: 10
                   Shaft Length: 0.23000000417232513
                   Shaft Radius: 0.009999999776482582
                   Shape: Arrow (Flat)
@@ -422,6 +337,7 @@ Visualization Manager:
                   Head Length: 0.07000000029802322
                   Head Radius: 0.029999999329447746
                   Name: Poses
+                  Queue Size: 10
                   Shaft Length: 0.23000000417232513
                   Shaft Radius: 0.009999999776482582
                   Shape: Arrow (Flat)
@@ -454,6 +370,7 @@ Visualization Manager:
           Head Length: 0.07000000029802322
           Head Radius: 0.029999999329447746
           Name: PoseArray
+          Queue Size: 10
           Shaft Length: 0.23000000417232513
           Shaft Radius: 0.009999999776482582
           Shape: Arrow (Flat)
@@ -481,6 +398,7 @@ Visualization Manager:
           Keep: 1
           Name: odom_main
           Position Tolerance: 0.10000000149011612
+          Queue Size: 10
           Shape:
             Alpha: 1
             Axes Length: 3
@@ -491,7 +409,7 @@ Visualization Manager:
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
             Value: Axes
-          Topic: /uav2/odometry/odom_main
+          Topic: /uav2/estimation_manager/odom_main
           Unreliable: true
           Value: true
       Enabled: true
@@ -508,6 +426,7 @@ Visualization Manager:
           Head Length: 0.07000000029802322
           Head Radius: 0.029999999329447746
           Name: PoseArray
+          Queue Size: 10
           Shaft Length: 0.23000000417232513
           Shaft Radius: 0.009999999776482582
           Shape: Arrow (Flat)
@@ -535,6 +454,7 @@ Visualization Manager:
           Keep: 1
           Name: odom_main
           Position Tolerance: 0.10000000149011612
+          Queue Size: 10
           Shape:
             Alpha: 1
             Axes Length: 3
@@ -545,7 +465,7 @@ Visualization Manager:
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
             Value: Axes
-          Topic: /uav3/odometry/odom_main
+          Topic: /uav3/estimation_manager/odom_main
           Unreliable: true
           Value: true
       Enabled: true
@@ -554,7 +474,7 @@ Visualization Manager:
   Global Options:
     Background Color: 255; 255; 255
     Default Light: true
-    Fixed Frame: uav1/local_origin
+    Fixed Frame: common_origin
     Frame Rate: 20
   Name: root
   Tools:
@@ -578,33 +498,33 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 23.411571502685547
+      Distance: 47.37047576904297
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.40742993354797363
-        Y: -3.652764320373535
-        Z: 5.521031198441051e-6
+        X: -0.619070291519165
+        Y: -8.624462127685547
+        Z: 3.6484952943283133e-06
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.36539798974990845
+      Pitch: 0.3103981912136078
       Target Frame: common_origin
-      Value: ThirdPersonFollower (rviz)
-      Yaw: 4.6885857582092285
+      Yaw: 4.443594455718994
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: true
-  Height: 686
+  Height: 1028
   Hide Left Dock: true
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000015600000258fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000004c6000001a1000001a900000153fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003b00000258000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d00610067006502000003c9000003450000025b000000c90000000100000116000003b6fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000003b6000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000038f0000003efc0100000002fb0000000800540069006d006500000000000000038f0000023f00fffffffb0000000800540069006d00650100000000000004500000000000000000000009e20000025800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd000000040000000000000156000003aefc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000004c6000001a1000001a900000153fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003b000003ae000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d00610067006502000003c9000003450000025b000000c90000000100000116000003b6fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000003b6000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000038f0000003efc0100000002fb0000000800540069006d006500000000000000038f0000035700fffffffb0000000800540069006d00650100000000000004500000000000000000000003a8000003ae00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -613,6 +533,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 2530
-  X: 1932
-  Y: 736
+  Width: 936
+  X: 966
+  Y: 34
