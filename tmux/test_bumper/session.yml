@@ -1,6 +1,6 @@
 name: simulation
 root: ./
-pre_window: export UAV_NAME=uav1; export UAV_TYPE=f450; export WORLD_NAME=simulation; export SENSORS="garmin_down"
+pre_window: export UAV_NAME=uav1; export UAV_TYPE=f450; export WORLD_NAME=simulation; export SENSORS="garmin_down"; export RUN_TYPE=simulation
 startup_window: control
 windows:
   - roscore:
