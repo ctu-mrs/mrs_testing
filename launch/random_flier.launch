@@ -12,7 +12,7 @@
       <!-- Load a user param file -->
       <rosparam if="$(eval not arg('custom_config') == '')" file="$(arg custom_config)" />
 
-      <param name="world_frame" value="$(arg UAV_NAME)/world_origin" />
+      <param name="world_frame" value="$(arg UAV_NAME)/local_origin" />
 
         <!-- Subscribers -->
       <remap from="~position_command_in" to="control_manager/tracker_cmd" />
