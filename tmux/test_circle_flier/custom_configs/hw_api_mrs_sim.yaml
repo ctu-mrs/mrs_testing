@@ -1,7 +1,7 @@
 input_mode:
-  actuators:             false
+  actuators:             true
   control_group:         false
-  attitude_rate:         true
+  attitude_rate:         false
   attitude:              false
   acceleration_hdg_rate: false
   acceleration_hdg:      false

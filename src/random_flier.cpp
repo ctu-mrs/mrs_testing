@@ -44,6 +44,8 @@ private:
 
   ros::Timer main_timer_;
 
+  std::string _world_frame_;
+
   double _main_timer_rate_;
 
   // parameters loaded from config file
@@ -69,7 +71,7 @@ void RandomFlier::onInit(void) {
 
   mrs_lib::ParamLoader param_loader(nh_, "RandomFlier");
 
-  // load parameters from config file
+  param_loader.loadParam("world_frame", _world_frame_);
   param_loader.loadParam("main_timer_rate", _main_timer_rate_);
   param_loader.loadParam("height", _height_);
   param_loader.loadParam("active", active_);
@@ -161,7 +163,7 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
     // create new point to fly to
     mrs_msgs::ReferenceStampedSrv new_point;
-    new_point.request.header.frame_id = "gps_origin";
+    new_point.request.header.frame_id = _world_frame_;
 
     double dist, direction, heading;
 
@@ -185,6 +187,9 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
       new_point.request.reference.position.y = cmd_y + sin(direction) * dist;
       new_point.request.reference.position.z = _height_;
       new_point.request.reference.heading    = heading;
+
+      ROS_INFO("[RandomFlier]: setting refrence: x %.2f, y %.2f, z %.2f, heading %.2f", new_point.request.reference.position.x,
+               new_point.request.reference.position.y, new_point.request.reference.position.z, new_point.request.reference.heading);
 
       if (service_client_reference_.call(new_point)) {
 

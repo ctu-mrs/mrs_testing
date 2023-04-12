@@ -1,7 +1,7 @@
 inputs:
   control_group: false
   attitude_rate: true
-  attitude:      false
+  attitude:      true
 
 outputs:
   distance_sensor:      true

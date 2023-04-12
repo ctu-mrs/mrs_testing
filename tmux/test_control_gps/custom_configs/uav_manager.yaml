@@ -1,6 +1,6 @@
 takeoff:
   after_takeoff:
-    controller: Se3Controller
+    controller: "MpcController"
 
 landing:
   disarm: true

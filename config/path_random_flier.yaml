@@ -1,7 +1,7 @@
 active: true
 main_timer_rate: 100 # [Hz]
 
-frame_id: "gps_origin"
+frame_id: "world_origin"
 
 use_heading: true
 relax_heading: true
