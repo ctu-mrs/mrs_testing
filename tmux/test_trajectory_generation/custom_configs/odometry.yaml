@@ -1,4 +1,0 @@
-altitude:
-
-  # Do not fuse rangefinder measurements when the UAV is tilted more than this angle
-  excessive_tilt: deg(70)

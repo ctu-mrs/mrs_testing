@@ -1,61 +1,52 @@
 name: simulation
 root: ./
-pre_window: export UAV_NAME=uav1; export UAV_TYPE=t650; export ODOMETRY_TYPE=gps; export PX4_SIM_SPEED_FACTOR=1.0; export SENSORS="garmin_down"
+pre_window: export UAV_NAME=uav1; export UAV_TYPE=t650; export RUN_TYPE=simulation; export ODOMETRY_TYPE=gps; export SENSORS="garmin_down"
 startup_window: control
 windows:
   - roscore:
       layout: tiled
       panes:
         - roscore
-  - gazebo:
+  - mrs_simulator:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_uav_testing simulation.launch gui:=true world_name:=safety_area
+        - waitForRos; export UAV_NAME=uav1; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
+        - waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+  # - gazebo:
+  #     layout: tiled
+  #     panes:
+  #       - waitForRos; roslaunch mrs_uav_testing simulation.launch gui:=true world_name:=safety_area
+  #       - waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --pos_file `pwd`/init_pos.yaml"
   - rviz:
       layout: tiled
       panes:
-        - waitForSimulation; roslaunch mrs_uav_testing rviz.launch name:=safety_area_test
-        - waitForSimulation; roslaunch mrs_rviz_plugins load_robot.launch
-        - waitForSimulation; roslaunch mrs_rviz_plugins rviz_interface.launch
-  - spawn:
-      layout: tiled
-      panes:
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --pos_file `pwd`/init_pos.yaml"
+        - waitForHw; roslaunch mrs_uav_testing rviz.launch name:=safety_area_test
+        - waitForHw; roslaunch mrs_rviz_plugins load_robot.launch
+        - waitForHw; roslaunch mrs_rviz_plugins rviz_interface.launch
   - status:
       layout: tiled
       panes:
-        - waitForOdometry; roslaunch mrs_uav_status status.launch
-  - bumper:
-      layout: tiled
-      panes:
-        - waitForOdometry; roslaunch mrs_bumper bumper.launch
+        - waitForHw; roslaunch mrs_uav_status status.launch
   - rviz_interface:
       layout: tiled
       panes:
-        - waitForControl; waitForControl; roslaunch mrs_rviz_plugins mrs_rviz_plugins.launch
   - control:
       layout: tiled
       panes:
-        - waitForOdometry; roslaunch mrs_uav_general core.launch DEBUG:=false config_control_manager:=./custom_configs/control_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml WORLD_FILE:=./world.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml
+        - waitForHw; roslaunch mrs_uav_general core.launch WORLD_FILE:=./world.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml
   - random_flier:
       layout: tiled
       panes:
-        # - waitForOdometry; roslaunch mrs_uav_testing random_flier.launch
-        - waitForOdometry; roslaunch mrs_uav_testing trajectory_random_flier.launch custom_config:=./custom_configs/trajectory_random_flier.yaml
-  - autostart:
-      layout: tiled
-      panes:
-        - waitForSimulation; roslaunch mrs_uav_general automatic_start.launch
+        # - waitForHw; roslaunch mrs_uav_testing random_flier.launch
+        - waitForHw; roslaunch mrs_uav_testing trajectory_random_flier.launch custom_config:=./custom_configs/trajectory_random_flier.yaml
   - takeoff:
       layout: tiled
       panes:
-        #{ uav1
-        - 'waitForControl;
-          rosservice call /$UAV_NAME/mavros/cmd/arming 1;
-          rosservice call /$UAV_NAME/mavros/set_mode 0 offboard'
-        #}
+        - waitForHw; roslaunch mrs_uav_general automatic_start.launch
+        - 'waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2.0; rosservice call /$UAV_NAME/hw_api/offboard'
   - gazebo_camera_follow:
       layout: tiled
       panes:
-        - waitForOdometry; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
+        - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
         - waitForControl; sleep 3; ~/.i3/layout_manager.sh layout.json

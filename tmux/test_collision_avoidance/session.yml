@@ -58,4 +58,4 @@ windows:
   - layout:
       layout: tiled
       panes:
-        - export UAV_NAME=uav1; waitForEstimation; ~/.i3/layout_manager.sh ./layout.json
+        - export UAV_NAME=uav1; waitForControl; sleep 3; ~/.i3/layout_manager.sh ./layout.json
