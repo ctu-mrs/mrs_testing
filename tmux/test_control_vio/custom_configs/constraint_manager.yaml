@@ -1,5 +1,8 @@
 constraint_management:
 
+  allowed_constraints:
+    vio: ["slow", "medium", "fast"]
+
   fallback_constraints:
 
-    VIO: "slow"
+    vio: "slow"
