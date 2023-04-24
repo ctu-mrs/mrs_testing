@@ -339,8 +339,12 @@ Visualization Manager:
               "": true
               Value: true
             ControlManager:
-              "": true
+              Bumper: true
+              SafetyArea: true
+              SafetyAreaCoordinates: true
               Value: false
+              cmd_odom: true
+              disturbances: true
             Grid_1: false
             Grid_5: true
             Hector:
@@ -367,8 +371,8 @@ Visualization Manager:
               prediction: true
               setpoint_odom: true
             Odometry:
-              "": true
               Value: false
+              odom_main: true
             Pathfinder:
               "": true
               Value: false
@@ -392,8 +396,9 @@ Visualization Manager:
             gps_origin: true
             ground_truth: true
             intensity_mapping:
-              "": true
               Value: true
+              inensity_grid: true
+              intensity_text: true
             local_origin: true
             rviz_interface:
               "": true
