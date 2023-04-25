@@ -93,13 +93,13 @@ Visualization Manager:
       Value: false
     - Alpha: 1
       Class: rviz/Axes
-      Enabled: true
+      Enabled: false
       Length: 5
       Name: world_origin
       Radius: 0.5
       Reference Frame: uav6/world_origin
       Show Trail: false
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz/Axes
       Enabled: false
@@ -373,6 +373,7 @@ Visualization Manager:
             EstimationManager:
               "": true
               Value: false
+              odom_main: true
             Pathfinder:
               "": true
               Value: false
@@ -396,8 +397,9 @@ Visualization Manager:
             world_origin: true
             ground_truth: true
             intensity_mapping:
-              "": true
               Value: true
+              inensity_grid: true
+              intensity_text: true
             local_origin: true
             rviz_interface:
               "": true
