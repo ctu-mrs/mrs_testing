@@ -1,16 +1,22 @@
 name: simulation
 root: ./
-pre_window: export UAV_NAME=uav1; export UAV_TYPE=f450; export ODOMETRY_TYPE=hector; export WORLD_FILE=./world.yaml; export PX4_SIM_SPEED_FACTOR=1.0; export SENSORS="garmin_down"
+pre_window: export UAV_NAME=uav1; export UAV_TYPE=f450; export WORLD_FILE=./world.yaml; export PX4_SIM_SPEED_FACTOR=1.0; export SENSORS="garmin_down"
 startup_window: status
 windows:
-  - roscore:
-      layout: even-vertical
-      panes:
-        - roscore
+ # - roscore:
+  #     layout: even-vertical
+  #     panes:
+  #       - roscore
   - gazebo:
       layout: even-vertical
       panes:
-        - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true world_file:='$(find mrs_uav_testing)/worlds/hector_test.world'
+        - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true world_name:=forest
+        - waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+        - waitForControl; gz camera -c gzclient_camera -f $UAV_NAME; history -s gz camera -c gzclient_camera -f $UAV_NAME
+  - spawn:
+      layout: even-vertical
+      panes:
+        - waitForSimulation; sleep 5; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --enable-ground-truth --enable-rplidar --use-gpu-ray"
   - rviz:
       layout: even-vertical
       panes:
@@ -36,7 +42,7 @@ windows:
   - control:
       layout: even-vertical
       panes:
-        - waitForOdometry; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_control_manager:=./custom_configs/control_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml
+        - waitForRos; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml config_active_estimators:=./custom_configs/active_estimators.yaml config_transform_manager:=./custom_configs/transform_manager.yaml
   # - random_flier:
   #     layout: tiled
   #     panes:
@@ -57,5 +63,4 @@ windows:
   - gazebo_camera_follow:
       layout: even-vertical
       panes:
-        - waitForOdometry; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
-        - waitForControl; sleep 3; ~/.i3/layout_manager.sh layout.json
+        # - waitForControl; sleep 3; ~/.i3/layout_manager.sh layout.json

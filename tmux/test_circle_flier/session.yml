@@ -3,19 +3,22 @@ root: ./
 startup_window: status
 pre_window: export UAV_NAME=uav1; export RUN_TYPE=simulation; export UAV_TYPE=t650; export WORLD_FILE=./world.yaml; export SENSORS="garmin_down"; export STANDALONE=true
 windows:
-  - roscore:
-      layout: tiled
-      panes:
-        - roscore
+  # - roscore:
+  #     layout: tiled
+  #     panes:
+  #       - roscore
+  # - mrs_simulator:
+  #     layout: tiled
+  #     panes:
+  #       - waitForRos; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
+  #       - waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
   - gazebo:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_simulation simulation.launch world_name:=grass_plane gui:=true
-        - waitForOdometry; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
-  - hw_api:
-      layout: tiled
-      panes:
-        - waitForRos; roslaunch mrs_uav_hw_api api.launch custom_config:=`rospack find mrs_uav_px4_api`/config/px4_api.yaml
+        - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
+        - waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+        - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1; exit
+        - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --enable-ground-truth"
   - status:
       layout: tiled
       panes:

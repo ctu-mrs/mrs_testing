@@ -36,8 +36,8 @@ windows:
   - random_flier:
       layout: tiled
       panes:
-        - waitForOdometry; roslaunch mrs_uav_testing random_flier.launch
-        # - waitForOdometry; roslaunch mrs_uav_testing trajectory_random_flier.launch
+        # - waitForRos; roslaunch mrs_uav_testing random_flier.launch
+        # - waitForRos; roslaunch mrs_uav_testing trajectory_random_flier.launch
   - takeoff:
       layout: tiled
       panes:

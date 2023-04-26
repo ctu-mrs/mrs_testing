@@ -2,4 +2,4 @@ constraint_management:
 
   fallback_constraints:
 
-    HECTOR: "slow"
+    hector_garmin: "slow"
