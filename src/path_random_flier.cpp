@@ -117,7 +117,6 @@ void PathRandomFlier::onInit(void) {
 
   mrs_lib::ParamLoader param_loader(nh_, "PathRandomFlier");
 
-  // load parameters from config file
   param_loader.loadParam("main_timer_rate", _main_timer_rate_);
   param_loader.loadParam("active", active_);
 

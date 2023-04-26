@@ -1,3 +1,7 @@
 max_thrust:
 
   enabled: false
+
+takeoff:
+  during_takeoff:
+    controller: Se3Controller

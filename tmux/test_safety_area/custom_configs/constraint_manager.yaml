@@ -2,4 +2,4 @@ constraint_management:
 
   fallback_constraints:
 
-    GPS: "fast"
+    gps_garmin: "fast"

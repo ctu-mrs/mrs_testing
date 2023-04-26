@@ -1,9 +1,10 @@
 publisher:
+  active: true
   rate: 30 # [Hz]
 
 radius: 5.0 # [m]
 speed: 5.0 # [m/s]
-dt: 0.01 # [s]
+dt: 0.10 # [s]
 n_points: 500 # [-]
 direction: 1 # [0 = CW, 1 = CCW]
 fly_now: true
