@@ -1,0 +1,3 @@
+spawn_args: "1 --enable-ground-truth --enable-rangefinder"
+test_line_tracker: false
+test_mpc_gotos: false

@@ -1,0 +1,20 @@
+<launch>
+
+  <arg name="UAV_NAME" default="$(env UAV_NAME)"/>
+  <arg name="custom_config" default="" />
+
+  <group ns="$(arg UAV_NAME)">
+
+    <node name="emulate_rtk_errors" pkg="nodelet" type="nodelet" args="standalone mrs_uav_testing/EmulateSensorErrors" output="screen" >
+
+      <!-- Load a user param file -->
+      <rosparam if="$(eval not arg('custom_config') == '')" file="$(arg custom_config)" />
+
+      <remap from="~rtk_in" to="hw_api/rtk_orig" />
+
+      <remap from="~rtk_out" to="hw_api/rtk" />
+
+    </node>
+
+  </group>
+</launch>

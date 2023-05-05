@@ -21,7 +21,7 @@ generate_dynamic_reconfigure_options(
   )
 
 set(LIBRARIES
-  RandomFlier TrajectoryRandomFlier PathRandomFlier CircleFlier TfTest
+  RandomFlier TrajectoryRandomFlier PathRandomFlier CircleFlier TfTest EmulateSensorErrors
   )
 
 set(EXECUTABLES
@@ -117,6 +117,18 @@ target_link_libraries(TfTest
   ${catkin_LIBRARIES}
   )
 
+add_library(EmulateSensorErrors
+  src/emulate_sensor_errors.cpp
+  )
+
+add_dependencies(EmulateSensorErrors
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  )
+
+target_link_libraries(EmulateSensorErrors
+  ${catkin_LIBRARIES}
+  )
 ## --------------------------------------------------------------
 ## |                           Testing                          |
 ## --------------------------------------------------------------
