@@ -5,11 +5,12 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Grid1
+        - /Grid2
         - /TF1/Frames1
         - /TF1/Tree1
-        - /ControlManager1/cmd_odom1
-        - /Odometry1/odom_main1
-        - /Odometry1/odom_main1/Shape1
+        - /EstimationManager1
+        - /EstimationManager1/odom_main1
       Splitter Ratio: 0.6081632375717163
     Tree Height: 818
   - Class: rviz/Selection
@@ -41,7 +42,7 @@ Visualization Manager:
       Cell Size: 1
       Class: rviz/Grid
       Color: 160; 160; 164
-      Enabled: true
+      Enabled: false
       Line Style:
         Line Width: 0.029999999329447746
         Value: Lines
@@ -54,7 +55,7 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 100
       Reference Frame: <Fixed Frame>
-      Value: true
+      Value: false
     - Alpha: 0.5
       Cell Size: 5
       Class: rviz/Grid
@@ -99,7 +100,7 @@ Visualization Manager:
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
       Name: UAVModel
-      Robot Description: /uav6/robot_model
+      Robot Description: /uav1/robot_model
       TF Prefix: ""
       Update Interval: 0
       Value: false
@@ -129,7 +130,7 @@ Visualization Manager:
           Size (Pixels): 3
           Size (m): 0.10000000149011612
           Style: Flat Squares
-          Topic: /uav6/os1_cloud_node/points
+          Topic: /uav1/os1_cloud_node/points
           Unreliable: true
           Use Fixed Frame: true
           Use rainbow: true
@@ -157,7 +158,7 @@ Visualization Manager:
           Size (Pixels): 3
           Size (m): 0.10000000149011612
           Style: Flat Squares
-          Topic: /uav6/rplidar/scan
+          Topic: /uav1/rplidar/scan
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: true
@@ -168,7 +169,7 @@ Visualization Manager:
       Displays:
         - Class: rviz/MarkerArray
           Enabled: true
-          Marker Topic: /uav6/control_manager/safety_area_markers
+          Marker Topic: /uav1/control_manager/safety_area_markers
           Name: SafetyhArea
           Namespaces:
             "": true
@@ -176,7 +177,7 @@ Visualization Manager:
           Value: true
         - Class: rviz/MarkerArray
           Enabled: true
-          Marker Topic: /uav6/control_manager/disturbances_markers
+          Marker Topic: /uav1/control_manager/disturbances_markers
           Name: Disturbances
           Namespaces:
             {}
@@ -184,7 +185,7 @@ Visualization Manager:
           Value: true
         - Class: rviz/MarkerArray
           Enabled: true
-          Marker Topic: /uav6/control_manager/safety_area_coordinates_markers
+          Marker Topic: /uav1/control_manager/safety_area_coordinates_markers
           Name: SafetyAreaCoordinates
           Namespaces:
             "": true
@@ -222,7 +223,7 @@ Visualization Manager:
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
             Value: Axes
-          Topic: /uav6/control_manager/control_reference
+          Topic: /uav1/control_manager/control_reference
           Unreliable: false
           Value: true
         - Class: rviz/Group
@@ -241,12 +242,12 @@ Visualization Manager:
               Shaft Length: 0.23000000417232513
               Shaft Radius: 0.009999999776482582
               Shape: Arrow (Flat)
-              Topic: /uav6/control_manager/trajectory_original/poses
+              Topic: /uav1/control_manager/trajectory_original/poses
               Unreliable: false
               Value: true
             - Class: rviz/MarkerArray
               Enabled: true
-              Marker Topic: /uav6/control_manager/trajectory_original/markers
+              Marker Topic: /uav1/control_manager/trajectory_original/markers
               Name: Markers
               Namespaces:
                 {}
@@ -268,7 +269,7 @@ Visualization Manager:
           Queue Size: 10
           Show sectors with no data: false
           Show undetected obstacles: true
-          Topic: /uav6/bumper/obstacle_sectors
+          Topic: /uav1/bumper/obstacle_sectors
           Unreliable: false
           Value: true
           Vertical collision threshold: 1
@@ -308,10 +309,10 @@ Visualization Manager:
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
             Value: Arrow
-          Topic: /uav6/control_manager/cmd_odom
+          Topic: /uav1/control_manager/cmd_odom
           Unreliable: true
           Value: false
-        - Angle Tolerance: 0.009999999776482582
+        - Angle Tolerance: 0.10000000149011612
           Class: rviz/Odometry
           Covariance:
             Orientation:
@@ -329,9 +330,9 @@ Visualization Manager:
               Value: true
             Value: false
           Enabled: true
-          Keep: 1
+          Keep: 1000
           Name: odom_main
-          Position Tolerance: 0.009999999776482582
+          Position Tolerance: 0.10000000149011612
           Queue Size: 10
           Shape:
             Alpha: 1
@@ -343,8 +344,8 @@ Visualization Manager:
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
             Value: Axes
-          Topic: /uav6/estimation_manager/odom_main
-          Unreliable: true
+          Topic: /uav1/estimation_manager/odom_main
+          Unreliable: false
           Value: true
       Enabled: true
       Name: EstimationManager
@@ -364,7 +365,7 @@ Visualization Manager:
           Shaft Length: 0.23000000417232513
           Shaft Radius: 0.009999999776482582
           Shape: Arrow (Flat)
-          Topic: /uav6/control_manager/mpc_tracker/predicted_trajectory_debugging
+          Topic: /uav1/control_manager/mpc_tracker/predicted_trajectory_debugging
           Unreliable: true
           Value: true
         - Angle Tolerance: 0.0010000000474974513
@@ -399,7 +400,7 @@ Visualization Manager:
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
             Value: Axes
-          Topic: /uav6/control_manager/mpc_tracker/setpoint_odom
+          Topic: /uav1/control_manager/mpc_tracker/setpoint_odom
           Unreliable: false
           Value: false
         - Alpha: 1
@@ -416,7 +417,7 @@ Visualization Manager:
           Shaft Length: 0.23000000417232513
           Shaft Radius: 0.009999999776482582
           Shape: Axes
-          Topic: /uav6/control_manager/mpc_tracker/mpc_reference_debugging
+          Topic: /uav1/control_manager/mpc_tracker/mpc_reference_debugging
           Unreliable: false
           Value: true
         - Class: rviz/Group
@@ -435,12 +436,12 @@ Visualization Manager:
               Shaft Length: 0.23000000417232513
               Shaft Radius: 0.009999999776482582
               Shape: Arrow (Flat)
-              Topic: /uav6/control_manager/mpc_tracker/trajectory_processed/poses
+              Topic: /uav1/control_manager/mpc_tracker/trajectory_processed/poses
               Unreliable: false
               Value: true
             - Class: rviz/MarkerArray
               Enabled: true
-              Marker Topic: /uav6/control_manager/mpc_tracker/trajectory_processed/markers
+              Marker Topic: /uav1/control_manager/mpc_tracker/trajectory_processed/markers
               Name: Markers
               Namespaces:
                 {}
@@ -454,7 +455,7 @@ Visualization Manager:
       Displays:
         - Class: rviz/MarkerArray
           Enabled: true
-          Marker Topic: /uav6/trajectory_generation/markers/final
+          Marker Topic: /uav1/trajectory_generation/markers/final
           Name: final
           Namespaces:
             {}
@@ -462,7 +463,7 @@ Visualization Manager:
           Value: true
         - Class: rviz/MarkerArray
           Enabled: true
-          Marker Topic: /uav6/trajectory_generation/markers/original
+          Marker Topic: /uav1/trajectory_generation/markers/original
           Name: original
           Namespaces:
             {}
@@ -474,7 +475,7 @@ Visualization Manager:
   Global Options:
     Background Color: 255; 255; 255
     Default Light: true
-    Fixed Frame: uav6/world_origin
+    Fixed Frame: uav1/world_origin
     Frame Rate: 60
   Name: root
   Tools:
@@ -498,7 +499,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 13.631331443786621
+      Distance: 16.36374282836914
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -506,17 +507,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.0
-        Y: 0.0
-        Z: 0.0
+        X: -8.659185409545898
+        Y: 3.876237392425537
+        Z: 4.413802344060969e-06
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.35539835691452026
-      Target Frame: uav6/fcu
-      Yaw: 2.7753989696502686
+      Pitch: 0.5997966527938843
+      Target Frame: uav1/fcu
+      Yaw: 2.4604008197784424
     Saved: ~
 Window Geometry:
   Displays:
