@@ -1,7 +1,13 @@
-max_thrust:
+max_throttle:
 
   enabled: false
 
 takeoff:
 
   takeoff_height: 3.0
+
+min_height_checking:
+  enabled: false
+
+max_height_checking:
+  enabled: false

@@ -1,42 +1,42 @@
 name: simulation
 root: ./
 startup_window: flip
-pre_window: export UAV_NAME=uav1; export RUN_TYPE=simulation; export UAV_TYPE=x500; export WORLD_FILE=./world.yaml; export SENSORS="garmin_down"
+pre_window: export UAV_NAME=uav1; export RUN_TYPE=simulation; export UAV_TYPE=x500; export SENSORS="garmin_down"; export ROS_HOSTNAME=localhost
 windows:
   - roscore:
       layout: tiled
       panes:
         - roscore
-  - gazebo:
+  - mrs_simulator:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_simulation simulation.launch world_name:=grass_plane gui:=true
-        - waitForOdometry; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
+        - waitForRos; export UAV_NAME=uav1; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
+        - waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+  # - gazebo:
+  #     layout: tiled
+  #     panes:
+  #       - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
+  #       - waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
+  #       - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --enable-ground-truth"
   - status:
       layout: tiled
       panes:
-        - waitForSimulation; roslaunch mrs_uav_status status.launch
-  - spawn:
-      layout: tiled
-      panes:
-        - waitForSimulation; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder"
+        - waitForHw; roslaunch mrs_uav_status status.launch
   - control:
       layout: tiled
       panes:
-        - waitForOdometry; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_odometry:=./custom_configs/odometry.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_flip_tracker:=./custom_configs/flip_tracker.yaml
+        - waitForHw; roslaunch mrs_uav_general core.launch config_constraint_manager:=./custom_configs/constraint_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml config_gain_manager:=./custom_configs/gain_manager.yaml config_control_manager:=./custom_configs/control_manager.yaml config_se3_controller:=./custom_configs/se3_controller.yaml config_flip_tracker:=./custom_configs/flip_tracker.yaml config_active_estimators:=./custom_configs/active_estimators.yaml
   - flip:
       layout: tiled
       panes:
         - 'history -s rosservice call /uav1/control_manager/switch_tracker FlipTracker'
-        - waitForRos; while true; do rosservice call /uav1/control_manager/flip_tracker/flip; done
+        - 'history -s rosservice call /uav1/control_manager/flip_tracker/flip'
   - takeoff:
       layout: tiled
       panes:
-        - waitForSimulation; roslaunch mrs_uav_general automatic_start.launch
-        - 'waitForControl;
-          rosservice call /$UAV_NAME/mavros/cmd/arming 1;
-          sleep 2;
-          rosservice call /$UAV_NAME/mavros/set_mode 0 offboard'
+        - waitForHw; roslaunch mrs_uav_general automatic_start.launch
+        - 'waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2.0; rosservice call /$UAV_NAME/hw_api/offboard'
   - goto:
       layout: tiled
       panes:
@@ -44,9 +44,9 @@ windows:
   - rviz:
       layout: tiled
       panes:
-        - waitForSimulation; roslaunch mrs_uav_testing rviz.launch name:=control_test
-        - waitForSimulation; roslaunch mrs_rviz_plugins load_robot.launch
-        - waitForSimulation; roslaunch mrs_rviz_plugins rviz_interface.launch
+        - waitForControl; roslaunch mrs_uav_testing rviz.launch name:=control_test
+        - waitForControl; roslaunch mrs_rviz_plugins load_robot.launch
+        - waitForControl; roslaunch mrs_rviz_plugins rviz_interface.launch
   - easy_control:
       layout: tiled
       panes:
@@ -55,4 +55,4 @@ windows:
   - layout:
       layout: tiled
       panes:
-        - waitForSimulation; sleep 3; ~/.i3/layout_manager.sh ./layout.json
+        - waitForControl; sleep 3; ~/.i3/layout_manager.sh ./layout.json
