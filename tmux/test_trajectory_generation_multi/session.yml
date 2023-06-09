@@ -1,46 +1,46 @@
 name: simulation
 root: ./
 startup_window: mrs_simulator
-pre_window: export RUN_TYPE=simulation; export ROS_HOSTNAME=localhost; export UAV_TYPE=t650; export SENSORS="garmin_down"; export N="4"; export UAVS=`for ((a=1;$a-($N+1);a=$a+1)); do echo $a; done`
+pre_window: export RUN_TYPE=simulation; export ROS_HOSTNAME=localhost; export BOND=false; export UAV_TYPE=t650; export SENSORS="garmin_down"; export N="4"; export UAVS=`for ((a=1;$a-($N+1);a=$a+1)); do echo $a; done`
 windows:
   - roscore:
       layout: tiled
       panes:
         - roscore
-  # - mrs_simulator:
-  #     layout: tiled
-  #     panes:
-  #       - waitForRos; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
-  #       - if (( $N < 1 )); then exit; fi; export UAV_NAME=uav1; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 2 )); then exit; fi; export UAV_NAME=uav2; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 3 )); then exit; fi; export UAV_NAME=uav3; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 4 )); then exit; fi; export UAV_NAME=uav4; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 5 )); then exit; fi; export UAV_NAME=uav5; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 6 )); then exit; fi; export UAV_NAME=uav6; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 7 )); then exit; fi; export UAV_NAME=uav7; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 8 )); then exit; fi; export UAV_NAME=uav8; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 9 )); then exit; fi; export UAV_NAME=uav9; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 10 )); then exit; fi; export UAV_NAME=uav10; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 11 )); then exit; fi; export UAV_NAME=uav11; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  #       - if (( $N < 12 )); then exit; fi; export UAV_NAME=uav12; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  - gazebo:
+  - mrs_simulator:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_simulation simulation.launch world_name:=grass_plane gui:=true
-        - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
-        - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "$UAVS $UAV_TYPE --enable-rangefinder --pos_file `pwd`/init_pos.yaml"
-        - if (( $N < 1 )); then exit; fi; export UAV_NAME=uav1; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 2 )); then exit; fi; export UAV_NAME=uav2; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 3 )); then exit; fi; export UAV_NAME=uav3; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 4 )); then exit; fi; export UAV_NAME=uav4; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 5 )); then exit; fi; export UAV_NAME=uav5; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 6 )); then exit; fi; export UAV_NAME=uav6; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 7 )); then exit; fi; export UAV_NAME=uav7; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 8 )); then exit; fi; export UAV_NAME=uav8; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 9 )); then exit; fi; export UAV_NAME=uav9; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 10 )); then exit; fi; export UAV_NAME=uav10; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 11 )); then exit; fi; export UAV_NAME=uav11; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
-        - if (( $N < 12 )); then exit; fi; export UAV_NAME=uav12; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+        - waitForRos; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./custom_configs/simulator.yaml
+        - if (( $N < 1 )); then exit; fi; export UAV_NAME=uav1; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 2 )); then exit; fi; export UAV_NAME=uav2; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 3 )); then exit; fi; export UAV_NAME=uav3; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 4 )); then exit; fi; export UAV_NAME=uav4; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 5 )); then exit; fi; export UAV_NAME=uav5; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 6 )); then exit; fi; export UAV_NAME=uav6; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 7 )); then exit; fi; export UAV_NAME=uav7; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 8 )); then exit; fi; export UAV_NAME=uav8; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 9 )); then exit; fi; export UAV_NAME=uav9; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 10 )); then exit; fi; export UAV_NAME=uav10; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 11 )); then exit; fi; export UAV_NAME=uav11; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+        - if (( $N < 12 )); then exit; fi; export UAV_NAME=uav12; waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch custom_config:=./custom_configs/hw_api_mrs_sim.yaml
+  # - gazebo:
+  #     layout: tiled
+  #     panes:
+  #       - waitForRos; roslaunch mrs_simulation simulation.launch world_name:=grass_plane gui:=true
+  #       - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
+  #       - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "$UAVS $UAV_TYPE --enable-rangefinder --pos_file `pwd`/init_pos.yaml"
+  #       - if (( $N < 1 )); then exit; fi; export UAV_NAME=uav1; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 2 )); then exit; fi; export UAV_NAME=uav2; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 3 )); then exit; fi; export UAV_NAME=uav3; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 4 )); then exit; fi; export UAV_NAME=uav4; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 5 )); then exit; fi; export UAV_NAME=uav5; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 6 )); then exit; fi; export UAV_NAME=uav6; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 7 )); then exit; fi; export UAV_NAME=uav7; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 8 )); then exit; fi; export UAV_NAME=uav8; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 9 )); then exit; fi; export UAV_NAME=uav9; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 10 )); then exit; fi; export UAV_NAME=uav10; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 11 )); then exit; fi; export UAV_NAME=uav11; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+  #       - if (( $N < 12 )); then exit; fi; export UAV_NAME=uav12; waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
   - tf_connector:
       layout: tiled
       panes:
