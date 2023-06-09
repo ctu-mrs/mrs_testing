@@ -154,7 +154,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -167,7 +167,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav1/control_manager/cmd_odom
+              Topic: /uav1/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -411,7 +411,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -424,7 +424,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav2/control_manager/cmd_odom
+              Topic: /uav2/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -668,7 +668,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -681,7 +681,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav3/control_manager/cmd_odom
+              Topic: /uav3/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -925,7 +925,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -938,7 +938,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav4/control_manager/cmd_odom
+              Topic: /uav4/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -1182,7 +1182,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -1195,7 +1195,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav5/control_manager/cmd_odom
+              Topic: /uav5/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -1435,7 +1435,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -1448,7 +1448,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav6/control_manager/cmd_odom
+              Topic: /uav6/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -1688,7 +1688,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -1701,7 +1701,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav7/control_manager/cmd_odom
+              Topic: /uav7/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -1941,7 +1941,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -1954,7 +1954,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav8/control_manager/cmd_odom
+              Topic: /uav8/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -2194,7 +2194,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -2207,7 +2207,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav9/control_manager/cmd_odom
+              Topic: /uav9/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -2447,7 +2447,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -2460,7 +2460,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav10/control_manager/cmd_odom
+              Topic: /uav10/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -2700,7 +2700,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -2713,7 +2713,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav11/control_manager/cmd_odom
+              Topic: /uav11/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
@@ -2953,7 +2953,7 @@ Visualization Manager:
                 Value: true
               Enabled: true
               Keep: 1
-              Name: cmd_odom
+              Name: control_reference
               Position Tolerance: 9.999999747378752e-05
               Queue Size: 10
               Shape:
@@ -2966,7 +2966,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Axes
-              Topic: /uav12/control_manager/cmd_odom
+              Topic: /uav12/control_manager/control_reference
               Unreliable: true
               Value: true
             - Class: rviz/Group
