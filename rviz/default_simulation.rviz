@@ -357,7 +357,7 @@ Visualization Manager:
           Unreliable: true
           Value: false
         - Angle Tolerance: 0.009999999776482582
-          Class: rviz/Odometry
+          Class: mrs_rviz_plugins/OdometryWithVelocity
           Covariance:
             Orientation:
               Alpha: 0.5
@@ -366,9 +366,9 @@ Visualization Manager:
               Frame: Local
               Offset: 1
               Scale: 1
-              Value: true
+              Value: false
             Position:
-              Alpha: 0.30000001192092896
+              Alpha: 0.3
               Color: 204; 51; 204
               Scale: 1
               Value: true
@@ -376,21 +376,31 @@ Visualization Manager:
           Enabled: true
           Keep: 1
           Name: odom_main
-          Position Tolerance: 0.009999999776482582
-          Queue Size: 10
-          Shape:
-            Alpha: 1
-            Axes Length: 1
-            Axes Radius: 0.10000000149011612
+          Position:
+            Axes length: 1
+            Axes radius: 0.1
             Color: 0; 25; 255
-            Head Length: 1
-            Head Radius: 0.30000001192092896
-            Shaft Length: 1
-            Shaft Radius: 0.05000000074505806
-            Value: Arrow
+            Head length: 1
+            Head radius: 0.3
+            Opacity: 255
+            Shaft length: 1
+            Shaft radius: 0.05
+            Shape: Arrow
+            Value: true
+          Position tolerance: 0.01
+          Queue Size: 10
           Topic: /uav1/odometry/odom_main
           Unreliable: true
           Value: true
+          Velocity:
+            Arrow scale: 0.3
+            Color: 0; 170; 0
+            Head length: 0.3
+            Head radius: 0.2
+            Opacity: 255
+            Shaft length: 1
+            Shaft radius: 0.1
+            Value: true
       Enabled: true
       Name: Odometry
     - Class: rviz/Group
