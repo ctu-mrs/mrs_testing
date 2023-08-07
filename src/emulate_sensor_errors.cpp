@@ -99,18 +99,18 @@ void EmulateSensorErrors::onInit() {
   jump_.y = 0.0;
   jump_.z = 0.0;
 
-  min_jump_.x = -10;
-  min_jump_.y = -10;
-  min_jump_.z = -10;
+  min_jump_.x = -5;
+  min_jump_.y = -5;
+  min_jump_.z = -5;
 
-  max_jump_.x = 10;
-  max_jump_.y = 10;
-  max_jump_.z = 10;
+  max_jump_.x = 5;
+  max_jump_.y = 5;
+  max_jump_.z = 5;
 
-  min_jump_time_ = 5;
-  max_jump_time_ = 10;
+  min_jump_time_ = 10;
+  max_jump_time_ = 20;
 
-  trigger_jump_time_ = ros::Time::now().toSec() + 20.0;
+  trigger_jump_time_ = ros::Time::now().toSec() + 30.0;
 
   coeff_ = 100000.0;
 

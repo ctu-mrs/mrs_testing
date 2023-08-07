@@ -130,7 +130,7 @@ Visualization Manager:
           Size (m): 0.10000000149011612
           Style: Flat Squares
           Topic: /uav6/os1_cloud_node/points
-          Unreliable: true
+          Unreliable: false
           Use Fixed Frame: true
           Use rainbow: true
           Value: true
@@ -309,7 +309,7 @@ Visualization Manager:
             Shaft Radius: 0.05000000074505806
             Value: Arrow
           Topic: /uav6/control_manager/cmd_odom
-          Unreliable: true
+          Unreliable: false
           Value: false
         - Angle Tolerance: 0.009999999776482582
           Class: rviz/Odometry
@@ -344,7 +344,7 @@ Visualization Manager:
             Shaft Radius: 0.05000000074505806
             Value: Axes
           Topic: /uav6/estimation_manager/odom_main
-          Unreliable: true
+          Unreliable: false
           Value: true
       Enabled: true
       Name: EstimationManager
@@ -365,7 +365,7 @@ Visualization Manager:
           Shaft Radius: 0.009999999776482582
           Shape: Arrow (Flat)
           Topic: /uav6/control_manager/mpc_tracker/predicted_trajectory_debugging
-          Unreliable: true
+          Unreliable: false
           Value: true
         - Angle Tolerance: 0.0010000000474974513
           Class: rviz/Odometry
