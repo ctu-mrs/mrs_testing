@@ -166,18 +166,13 @@ install(TARGETS ${EXECUTABLES}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
 
-install(DIRECTORY launch config worlds layouts rviz test
+install(DIRECTORY launch config worlds layouts test
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   )
 
-install(DIRECTORY tmux scripts
+install(DIRECTORY tmux
   USE_SOURCE_PERMISSIONS
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  )
-
-install(DIRECTORY scripts/
-  USE_SOURCE_PERMISSIONS
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
 
 install(FILES plugins.xml
