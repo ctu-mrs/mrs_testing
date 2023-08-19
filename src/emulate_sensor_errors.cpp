@@ -58,7 +58,7 @@ private:
   mrs_msgs::RtkFixType fix_type_;
 
 private:
-  void callbackRtk(mrs_lib::SubscribeHandler<mrs_msgs::RtkGps> &wrp);
+  void callbackRtk(const mrs_msgs::RtkGps::ConstPtr msg);
 };
 
 //}
@@ -134,14 +134,14 @@ void EmulateSensorErrors::onInit() {
 
 /* callbackTersus() //{ */
 
-void EmulateSensorErrors::callbackRtk(mrs_lib::SubscribeHandler<mrs_msgs::RtkGps> &wrp) {
+void EmulateSensorErrors::callbackRtk(const mrs_msgs::RtkGps::ConstPtr msg) {
 
   if (!is_initialized_)
     return;
 
   mrs_msgs::RtkGps rtk_msg_out;
 
-  rtk_msg_out = *wrp.getMsg();
+  rtk_msg_out = *msg;
 
   if (rtk_msg_out.header.stamp.toSec() > trigger_jump_time_) {
     if (emulating_jump_) {
