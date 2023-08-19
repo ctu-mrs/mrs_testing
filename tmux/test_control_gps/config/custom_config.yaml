@@ -1,0 +1,30 @@
+mrs_uav_managers:
+
+  estimation_manager:
+
+    # loaded state estimator plugins
+    state_estimators: [
+      "gps_baro",
+      "gps_garmin",
+      "ground_truth",
+    ]
+
+    initial_state_estimator: "gps_garmin" # will be used as the first state estimator
+    agl_height_estimator: "garmin_agl" # only slightly filtered height for checking min height (not used in control feedback)
+
+  constraint_manager:
+
+    constraint_management:
+
+      fallback_constraints:
+
+        GPS: "medium"
+
+  uav_manager:
+
+    takeoff:
+      after_takeoff:
+        controller: "Se3Controller"
+
+    landing:
+      disarm: true
