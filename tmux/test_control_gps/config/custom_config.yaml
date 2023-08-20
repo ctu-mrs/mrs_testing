@@ -1,5 +1,11 @@
 mrs_uav_managers:
 
+  control_manager:
+
+    trackers: [
+      "LineTracker",
+    ]
+
   estimation_manager:
 
     # loaded state estimator plugins
@@ -14,17 +20,17 @@ mrs_uav_managers:
 
   constraint_manager:
 
-    constraint_management:
+    default_constraints:
 
-      fallback_constraints:
-
-        GPS: "medium"
+      gps_baro: "fast"
+      gps_garmin: "fast"
+      ground_truth: "fast"
 
   uav_manager:
 
     takeoff:
       after_takeoff:
-        controller: "Se3Controller"
+        controller: "MpcController"
 
     landing:
       disarm: true

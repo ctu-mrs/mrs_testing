@@ -10,7 +10,6 @@
 #include <mrs_msgs/Reference.h>
 #include <mrs_msgs/ValidateReference.h>
 #include <mrs_msgs/ControlManagerDiagnostics.h>
-#include <mrs_msgs/MpcPredictionFullState.h>
 
 #include <mrs_lib/param_loader.h>
 #include <mrs_lib/subscribe_handler.h>
@@ -46,7 +45,6 @@ private:
 
   mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>            sh_tracker_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
-  mrs_lib::SubscribeHandler<mrs_msgs::MpcPredictionFullState>    sh_mpc_predition_;
 
   std::optional<mrs_msgs::TrackerCommand> transformTrackerCmd(const mrs_msgs::TrackerCommand& tracker_cmd, const std::string& target_frame);
 
@@ -158,9 +156,8 @@ void PathRandomFlier::onInit(void) {
   shopts.no_message_timeout = mrs_lib::no_timeout;
   shopts.threadsafe         = true;
 
-  sh_tracker_cmd_          = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "position_command_in");
+  sh_tracker_cmd_          = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "tracker_command_in");
   sh_control_manager_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics>(shopts, "control_manager_diag_in");
-  sh_mpc_predition_        = mrs_lib::SubscribeHandler<mrs_msgs::MpcPredictionFullState>(shopts, "mpc_prediction_in");
 
   service_server_activate_        = nh_.advertiseService("activate_in", &PathRandomFlier::callbackActivate, this);
   service_client_path_            = nh_.serviceClient<mrs_msgs::PathSrv>("path_out");
@@ -229,9 +226,9 @@ void PathRandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
     return;
   }
 
-  if (!sh_mpc_predition_.hasMsg()) {
+  if (!sh_tracker_cmd_.getMsg()->use_full_state_prediction) {
 
-    ROS_INFO_THROTTLE(1.0, "waiting for MPC prediction");
+    ROS_INFO_THROTTLE(1.0, "waiting for prediction");
     return;
   }
 
@@ -277,11 +274,13 @@ void PathRandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
       mrs_msgs::ReferenceStamped new_point;
 
-      new_point.header               = sh_mpc_predition_.getMsg()->header;
-      new_point.reference.position.x = sh_mpc_predition_.getMsg()->position[prediction_idx].x;
-      new_point.reference.position.y = sh_mpc_predition_.getMsg()->position[prediction_idx].y;
-      new_point.reference.position.z = sh_mpc_predition_.getMsg()->position[prediction_idx].z;
-      new_point.reference.heading    = sh_mpc_predition_.getMsg()->heading[prediction_idx];
+      auto prediction = sh_tracker_cmd_.getMsg()->full_state_prediction;
+
+      new_point.header               = prediction.header;
+      new_point.reference.position.x = prediction.position[prediction_idx].x;
+      new_point.reference.position.y = prediction.position[prediction_idx].y;
+      new_point.reference.position.z = prediction.position[prediction_idx].z;
+      new_point.reference.heading    = prediction.heading[prediction_idx];
 
       auto res = transformer_->transformSingle(new_point, _frame_id_);
 

@@ -1,11 +1,8 @@
-simulation_rate: 100.0 # Hz
-clock_rate: 100.0 # Hz
+simulation_rate: 250.0 # Hz
+clock_rate: 250.0 # Hz
 realtime_factor: 1.0
 
 iterate_without_input: true
-
-takeoff_patch:
-  enabled: false
 
 uav_names: [
   "uav1",
