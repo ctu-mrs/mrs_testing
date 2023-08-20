@@ -1,6 +1,11 @@
-name: simulation
+# do not modify these
 root: ./
-startup_window: mrs_simulator
+name: simulation
+socket_name: mrs
+attach: false
+tmux_options: -f /etc/ctu-mrs/tmux.conf
+# you can modify these
+startup_window: core
 pre_window: export RUN_TYPE=simulation; export ROS_HOSTNAME=localhost; export BOND=false; export UAV_TYPE=t650; export SENSORS="garmin_down"; export N="4"; export UAVS=`for ((a=1;$a-($N+1);a=$a+1)); do echo $a; done`; export PLATFORM_CONFIG=`rospack find mrs_multirotor_simulator`/config/mrs_uav_system/$UAV_TYPE.yaml; export CUSTOM_CONFIG=./config/custom_config.yaml; export NETWORK_CONFIG=./config/network_config.yaml
 windows:
   - roscore:
@@ -45,7 +50,7 @@ windows:
       layout: tiled
       panes:
         - waitForHw; roslaunch tf_connector tf_connector.launch custom_config:=./config/tf_connector.yaml
-  - control:
+  - core:
       layout: tiled
       panes:
         - if (( $N < 1 )); then exit; fi; export UAV_NAME=uav1; waitForHw; roslaunch mrs_uav_core core.launch world_config:=./world_$UAV_NAME.yaml
