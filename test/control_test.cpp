@@ -16,7 +16,7 @@
 #include <mrs_msgs/String.h>
 #include <mrs_msgs/TrackerCommand.h>
 #include <mrs_msgs/ControlManagerDiagnostics.h>
-#include <mrs_msgs/SpawnerDiagnostics.h>
+#include <mrs_msgs/GazeboSpawnerDiagnostics.h>
 
 #include <nav_msgs/Odometry.h>
 
@@ -148,7 +148,7 @@ private:
 
   // | ----------------------- subscribers ---------------------- |
 
-  mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>        sh_spawner_diag_;
+  mrs_lib::SubscribeHandler<mrs_msgs::GazeboSpawnerDiagnostics>  sh_spawner_diag_;
   mrs_lib::SubscribeHandler<nav_msgs::Odometry>                  sh_odometry_;
   mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>            sh_tracker_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
@@ -345,7 +345,7 @@ ControlTest::ControlTest() {
 
   sh_odometry_ = mrs_lib::SubscribeHandler<nav_msgs::Odometry>(shopts, "odometry_in");
 
-  sh_spawner_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>(shopts, "spawner_diagnostics_in");
+  sh_spawner_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::GazeboSpawnerDiagnostics>(shopts, "spawner_diagnostics_in");
 
   sh_tracker_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "tracker_cmd_in");
 
@@ -462,7 +462,7 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
       if (_start_with_takeoff_) {
         if (sh_spawner_diag_.hasMsg()) {
-          mrs_msgs::SpawnerDiagnostics diag = *sh_spawner_diag_.getMsg();
+          mrs_msgs::GazeboSpawnerDiagnostics diag = *sh_spawner_diag_.getMsg();
           if (diag.spawn_called && !diag.processing) {
             if (sh_odometry_.hasMsg() && sh_control_manager_diag_.hasMsg()) {
               changeState(TAKEOFF_STATE);
