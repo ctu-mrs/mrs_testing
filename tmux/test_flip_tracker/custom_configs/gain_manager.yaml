@@ -2,7 +2,7 @@ gain_management:
 
   fallback_gains:
 
-    GPS: "tight"
+    ground_truth: "tight"
 
 tight:
 

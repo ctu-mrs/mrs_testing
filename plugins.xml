@@ -33,3 +33,9 @@
     <description>the TfTest nodelet</description>
   </class>
 </library>
+
+<library path="lib/libEmulateSensorErrors">
+  <class name="mrs_uav_testing/EmulateSensorErrors" type="mrs_uav_testing::EmulateSensorErrors" base_class_type="nodelet::Nodelet">
+    <description>the EmulateSensorErrors nodelet</description>
+  </class>
+</library>

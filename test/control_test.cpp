@@ -14,14 +14,11 @@
 #include <mrs_msgs/Vec4.h>
 #include <mrs_msgs/Vec1.h>
 #include <mrs_msgs/String.h>
-#include <mrs_msgs/PositionCommand.h>
+#include <mrs_msgs/TrackerCommand.h>
 #include <mrs_msgs/ControlManagerDiagnostics.h>
-#include <mrs_msgs/SpawnerDiagnostics.h>
+#include <mrs_msgs/GazeboSpawnerDiagnostics.h>
 
 #include <nav_msgs/Odometry.h>
-
-#include <mavros_msgs/CommandBool.h>
-#include <mavros_msgs/SetMode.h>
 
 #include <mutex>
 
@@ -151,9 +148,9 @@ private:
 
   // | ----------------------- subscribers ---------------------- |
 
-  mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>        sh_spawner_diag_;
+  mrs_lib::SubscribeHandler<mrs_msgs::GazeboSpawnerDiagnostics>  sh_spawner_diag_;
   mrs_lib::SubscribeHandler<nav_msgs::Odometry>                  sh_odometry_;
-  mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>           sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>            sh_tracker_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
 
   // | ----------------------- publishers ----------------------- |
@@ -169,7 +166,7 @@ private:
   ros::ServiceClient service_client_takeoff_;
   ros::ServiceClient service_client_land_;
   ros::ServiceClient service_client_land_home_;
-  ros::ServiceClient service_client_motors_;
+  ros::ServiceClient service_client_toggle_control_output_;
   ros::ServiceClient service_client_set_reference_;
   ros::ServiceClient service_client_goto_;
   ros::ServiceClient service_client_goto_relative_;
@@ -348,9 +345,9 @@ ControlTest::ControlTest() {
 
   sh_odometry_ = mrs_lib::SubscribeHandler<nav_msgs::Odometry>(shopts, "odometry_in");
 
-  sh_spawner_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::SpawnerDiagnostics>(shopts, "spawner_diagnostics_in");
+  sh_spawner_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::GazeboSpawnerDiagnostics>(shopts, "spawner_diagnostics_in");
 
-  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>(shopts, "position_command_in");
+  sh_tracker_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "tracker_cmd_in");
 
   sh_control_manager_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics>(shopts, "control_manager_diagnostics_in");
 
@@ -364,13 +361,13 @@ ControlTest::ControlTest() {
 
   // | ---------------- takeoff/landing services ---------------- |
 
-  service_client_switch_tracker_ = nh_.serviceClient<mrs_msgs::String>("switch_tracker_out");
-  service_client_motors_         = nh_.serviceClient<std_srvs::SetBool>("motors_out");
-  service_client_arm_            = nh_.serviceClient<mavros_msgs::CommandBool>("arm_out");
-  service_client_offboard_       = nh_.serviceClient<mavros_msgs::SetMode>("offboard_out");
-  service_client_takeoff_        = nh_.serviceClient<std_srvs::Trigger>("takeoff_out");
-  service_client_land_           = nh_.serviceClient<std_srvs::Trigger>("land_out");
-  service_client_land_home_      = nh_.serviceClient<std_srvs::Trigger>("land_home_out");
+  service_client_switch_tracker_        = nh_.serviceClient<mrs_msgs::String>("switch_tracker_out");
+  service_client_toggle_control_output_ = nh_.serviceClient<std_srvs::SetBool>("toggle_control_output_out");
+  service_client_arm_                   = nh_.serviceClient<std_srvs::SetBool>("arm_out");
+  service_client_offboard_              = nh_.serviceClient<std_srvs::Trigger>("offboard_out");
+  service_client_takeoff_               = nh_.serviceClient<std_srvs::Trigger>("takeoff_out");
+  service_client_land_                  = nh_.serviceClient<std_srvs::Trigger>("land_out");
+  service_client_land_home_             = nh_.serviceClient<std_srvs::Trigger>("land_home_out");
 
   // | ----------- control manager reference interface ---------- |
 
@@ -465,7 +462,7 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
       if (_start_with_takeoff_) {
         if (sh_spawner_diag_.hasMsg()) {
-          mrs_msgs::SpawnerDiagnostics diag = *sh_spawner_diag_.getMsg();
+          mrs_msgs::GazeboSpawnerDiagnostics diag = *sh_spawner_diag_.getMsg();
           if (diag.spawn_called && !diag.processing) {
             if (sh_odometry_.hasMsg() && sh_control_manager_diag_.hasMsg()) {
               changeState(TAKEOFF_STATE);
@@ -680,7 +677,7 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
     case TRAJECTORY_CIRCLE_LOOP: {
 
-      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
       if ((ros::Time::now() - looping_start_time_).toSec() > _looping_circle_duration_) {
         if (mrs_lib::geometry::dist(vec3_t(odom_x, odom_y, odom_z), vec3_t(cmd_x, cmd_y, cmd_z)) < 2.0) {
@@ -711,7 +708,7 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
     case TRAJECTORY_CIRCLE_POST_PAUSE: {
 
-      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+      auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
       if ((ros::Time::now() - looping_start_time_).toSec() > 20.0) {
         if (mrs_lib::geometry::dist(vec3_t(odom_x, odom_y, odom_z), vec3_t(cmd_x, cmd_y, cmd_z)) < 2.0) {
@@ -792,11 +789,11 @@ void ControlTest::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
   if (current_state_ >= SET_REFERENCE_TOPIC_STATE) {
 
-    auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+    auto [cmd_x, cmd_y, cmd_z] = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
     double cmd_heading = 0;
     try {
-      cmd_heading = mrs_lib::getHeading(sh_position_cmd_.getMsg());
+      cmd_heading = mrs_lib::getHeading(sh_tracker_cmd_.getMsg());
     }
     catch (mrs_lib::AttitudeConverter::GetHeadingException e) {
       ROS_ERROR_THROTTLE(1.0, "[ControlTest]: exception caught: '%s'", e.what());
@@ -873,8 +870,8 @@ void ControlTest::changeState(const ControlState_t new_state) {
   mrs_msgs::Vec4                goal_vec4;
   mrs_msgs::Vec1                goal_vec1;
   std_srvs::SetBool             goal_bool;
-  mavros_msgs::CommandBool      goal_mavros_commandbool;
-  mavros_msgs::SetMode          goal_mavros_set_mode;
+  std_srvs::SetBool             srv_arming;
+  std_srvs::Trigger             srv_offboard;
   std_srvs::Trigger             goal_trigger;
   mrs_msgs::Reference           trajectory_point;
 
@@ -884,10 +881,10 @@ void ControlTest::changeState(const ControlState_t new_state) {
 
   if (current_state_ > TAKEOFF_STATE) {
 
-    std::tie(cmd_x, cmd_y, cmd_z) = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+    std::tie(cmd_x, cmd_y, cmd_z) = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
     try {
-      cmd_heading = mrs_lib::getHeading(sh_position_cmd_.getMsg());
+      cmd_heading = mrs_lib::getHeading(sh_tracker_cmd_.getMsg());
     }
     catch (mrs_lib::AttitudeConverter::GetHeadingException e) {
       ROS_ERROR_THROTTLE(1.0, "[ControlTest]: exception caught: '%s'", e.what());
@@ -930,20 +927,18 @@ void ControlTest::changeState(const ControlState_t new_state) {
 
       /* //{ test the full takeoff sequence */
 
-      // | ------------------------- motors ------------------------- |
+      // | --------------------- control output --------------------- |
       goal_bool.request.data = 1;
-      service_client_motors_.call(goal_bool);
+      service_client_toggle_control_output_.call(goal_bool);
 
       wait.sleep();
 
       // | ------------------------- arming ------------------------- |
-      goal_mavros_commandbool.request.value = 1;
-      service_client_arm_.call(goal_mavros_commandbool);
+      srv_arming.request.data = true;
+      service_client_arm_.call(srv_arming);
 
       // | ------------------------ offboard ------------------------ |
-      goal_mavros_set_mode.request.base_mode   = 0;
-      goal_mavros_set_mode.request.custom_mode = "offboard";
-      service_client_offboard_.call(goal_mavros_set_mode);
+      service_client_offboard_.call(srv_offboard);
 
       wait.sleep();
 

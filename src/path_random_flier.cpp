@@ -10,7 +10,6 @@
 #include <mrs_msgs/Reference.h>
 #include <mrs_msgs/ValidateReference.h>
 #include <mrs_msgs/ControlManagerDiagnostics.h>
-#include <mrs_msgs/MpcPredictionFullState.h>
 
 #include <mrs_lib/param_loader.h>
 #include <mrs_lib/subscribe_handler.h>
@@ -44,11 +43,10 @@ private:
 
   bool checkReference(const std::string frame, const double x, const double y, const double z, const double hdg);
 
-  mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>           sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>            sh_tracker_cmd_;
   mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics> sh_control_manager_diag_;
-  mrs_lib::SubscribeHandler<mrs_msgs::MpcPredictionFullState>    sh_mpc_predition_;
 
-  std::optional<mrs_msgs::PositionCommand> transformPositionCmd(const mrs_msgs::PositionCommand& position_cmd, const std::string& target_frame);
+  std::optional<mrs_msgs::TrackerCommand> transformTrackerCmd(const mrs_msgs::TrackerCommand& tracker_cmd, const std::string& target_frame);
 
   std::shared_ptr<mrs_lib::Transformer> transformer_;
 
@@ -117,7 +115,6 @@ void PathRandomFlier::onInit(void) {
 
   mrs_lib::ParamLoader param_loader(nh_, "PathRandomFlier");
 
-  // load parameters from config file
   param_loader.loadParam("main_timer_rate", _main_timer_rate_);
   param_loader.loadParam("active", active_);
 
@@ -159,9 +156,8 @@ void PathRandomFlier::onInit(void) {
   shopts.no_message_timeout = mrs_lib::no_timeout;
   shopts.threadsafe         = true;
 
-  sh_position_cmd_         = mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>(shopts, "position_command_in");
+  sh_tracker_cmd_          = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "tracker_command_in");
   sh_control_manager_diag_ = mrs_lib::SubscribeHandler<mrs_msgs::ControlManagerDiagnostics>(shopts, "control_manager_diag_in");
-  sh_mpc_predition_        = mrs_lib::SubscribeHandler<mrs_msgs::MpcPredictionFullState>(shopts, "mpc_prediction_in");
 
   service_server_activate_        = nh_.advertiseService("activate_in", &PathRandomFlier::callbackActivate, this);
   service_client_path_            = nh_.serviceClient<mrs_msgs::PathSrv>("path_out");
@@ -224,15 +220,15 @@ void PathRandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
     return;
   }
 
-  if (!sh_position_cmd_.hasMsg()) {
+  if (!sh_tracker_cmd_.hasMsg()) {
 
-    ROS_INFO_THROTTLE(1.0, "waiting for PositionCommand");
+    ROS_INFO_THROTTLE(1.0, "waiting for TrackerCommand");
     return;
   }
 
-  if (!sh_mpc_predition_.hasMsg()) {
+  if (!sh_tracker_cmd_.getMsg()->use_full_state_prediction) {
 
-    ROS_INFO_THROTTLE(1.0, "waiting for MPC prediction");
+    ROS_INFO_THROTTLE(1.0, "waiting for prediction");
     return;
   }
 
@@ -244,17 +240,17 @@ void PathRandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
   bool has_goal = sh_control_manager_diag_.getMsg()->tracker_status.have_goal;
 
-  auto position_cmd_transformed = transformPositionCmd(*sh_position_cmd_.getMsg(), _uav_name_ + "/" + _frame_id_);
+  auto tracker_cmd_transformed = transformTrackerCmd(*sh_tracker_cmd_.getMsg(), _uav_name_ + "/" + _frame_id_);
 
-  if (!position_cmd_transformed) {
+  if (!tracker_cmd_transformed) {
     std::stringstream ss;
-    ss << "could not transform position_cmd to the path frame";
+    ss << "could not transform tracker_cmd to the path frame";
     ROS_ERROR_STREAM("[MrsTrajectoryGeneration]: " << ss.str());
     return;
   }
 
-  auto [cmd_x, cmd_y, cmd_z]                   = mrs_lib::getPosition(position_cmd_transformed.value());
-  auto [cmd_speed_x, cmd_speed_y, cmd_speed_z] = mrs_lib::getVelocity(position_cmd_transformed.value());
+  auto [cmd_x, cmd_y, cmd_z]                   = mrs_lib::getPosition(tracker_cmd_transformed.value());
+  auto [cmd_speed_x, cmd_speed_y, cmd_speed_z] = mrs_lib::getVelocity(tracker_cmd_transformed.value());
 
   ROS_INFO("[PathRandomFlier]: cmd_x: %.2f, cmd_y: %.2f, cmd_z: %.2f", cmd_x, cmd_y, cmd_z);
 
@@ -278,11 +274,13 @@ void PathRandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
 
       mrs_msgs::ReferenceStamped new_point;
 
-      new_point.header               = sh_mpc_predition_.getMsg()->header;
-      new_point.reference.position.x = sh_mpc_predition_.getMsg()->position[prediction_idx].x;
-      new_point.reference.position.y = sh_mpc_predition_.getMsg()->position[prediction_idx].y;
-      new_point.reference.position.z = sh_mpc_predition_.getMsg()->position[prediction_idx].z;
-      new_point.reference.heading    = sh_mpc_predition_.getMsg()->heading[prediction_idx];
+      auto prediction = sh_tracker_cmd_.getMsg()->full_state_prediction;
+
+      new_point.header               = prediction.header;
+      new_point.reference.position.x = prediction.position[prediction_idx].x;
+      new_point.reference.position.y = prediction.position[prediction_idx].y;
+      new_point.reference.position.z = prediction.position[prediction_idx].z;
+      new_point.reference.heading    = prediction.heading[prediction_idx];
 
       auto res = transformer_->transformSingle(new_point, _frame_id_);
 
@@ -469,25 +467,25 @@ bool PathRandomFlier::checkReference(const std::string frame, const double x, co
 
 //}
 
-/* transformPositionCmd() //{ */
+/* transformTrackerCmd() //{ */
 
-std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(const mrs_msgs::PositionCommand& position_cmd, const std::string& target_frame) {
+std::optional<mrs_msgs::TrackerCommand> PathRandomFlier::transformTrackerCmd(const mrs_msgs::TrackerCommand& tracker_cmd, const std::string& target_frame) {
 
-  // if we transform to the current control frame, which is in fact the same frame as the position_cmd is in
+  // if we transform to the current control frame, which is in fact the same frame as the tracker_cmd is in
   if (target_frame == "") {
-    return position_cmd;
+    return tracker_cmd;
   }
 
   // find the transformation
-  auto tf = transformer_->getTransform(position_cmd.header.frame_id, target_frame, position_cmd.header.stamp);
+  auto tf = transformer_->getTransform(tracker_cmd.header.frame_id, target_frame, tracker_cmd.header.stamp);
 
   if (!tf) {
-    ROS_ERROR("[MrsTrajectoryGeneration]: could not find transform from '%s' to '%s' in time %f", position_cmd.header.frame_id.c_str(), target_frame.c_str(),
-              position_cmd.header.stamp.toSec());
+    ROS_ERROR("[MrsTrajectoryGeneration]: could not find transform from '%s' to '%s' in time %f", tracker_cmd.header.frame_id.c_str(), target_frame.c_str(),
+              tracker_cmd.header.stamp.toSec());
     return {};
   }
 
-  mrs_msgs::PositionCommand cmd_out;
+  mrs_msgs::TrackerCommand cmd_out;
 
   cmd_out.header.stamp    = tf.value().header.stamp;
   cmd_out.header.frame_id = transformer_->frame_to(tf.value());
@@ -496,10 +494,10 @@ std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(c
 
   {
     geometry_msgs::PoseStamped pos;
-    pos.header = position_cmd.header;
+    pos.header = tracker_cmd.header;
 
-    pos.pose.position    = position_cmd.position;
-    pos.pose.orientation = mrs_lib::AttitudeConverter(0, 0, position_cmd.heading);
+    pos.pose.position    = tracker_cmd.position;
+    pos.pose.orientation = mrs_lib::AttitudeConverter(0, 0, tracker_cmd.heading);
 
     if (auto ret = transformer_->transform(pos, tf.value())) {
       cmd_out.position = ret.value().pose.position;
@@ -507,7 +505,7 @@ std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(c
         cmd_out.heading = mrs_lib::AttitudeConverter(ret.value().pose.orientation).getHeading();
       }
       catch (...) {
-        ROS_ERROR("[MrsTrajectoryGeneration]: failed to transform heading in position_cmd");
+        ROS_ERROR("[MrsTrajectoryGeneration]: failed to transform heading in tracker_cmd");
         cmd_out.heading = 0;
       }
     } else {
@@ -521,9 +519,9 @@ std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(c
 
   {
     geometry_msgs::Vector3Stamped vec;
-    vec.header = position_cmd.header;
+    vec.header = tracker_cmd.header;
 
-    vec.vector = position_cmd.velocity;
+    vec.vector = tracker_cmd.velocity;
 
     if (auto ret = transformer_->transform(vec, tf.value())) {
       cmd_out.velocity = ret.value().vector;
@@ -538,9 +536,9 @@ std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(c
 
   {
     geometry_msgs::Vector3Stamped vec;
-    vec.header = position_cmd.header;
+    vec.header = tracker_cmd.header;
 
-    vec.vector = position_cmd.acceleration;
+    vec.vector = tracker_cmd.acceleration;
 
     if (auto ret = transformer_->transform(vec, tf.value())) {
       cmd_out.acceleration = ret.value().vector;
@@ -555,9 +553,9 @@ std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(c
 
   {
     geometry_msgs::Vector3Stamped vec;
-    vec.header = position_cmd.header;
+    vec.header = tracker_cmd.header;
 
-    vec.vector = position_cmd.jerk;
+    vec.vector = tracker_cmd.jerk;
 
     if (auto ret = transformer_->transform(vec, tf.value())) {
       cmd_out.jerk = ret.value().vector;
@@ -571,9 +569,9 @@ std::optional<mrs_msgs::PositionCommand> PathRandomFlier::transformPositionCmd(c
   /* heading derivatives //{ */
 
   // this does not need to be transformed
-  cmd_out.heading_rate         = position_cmd.heading_rate;
-  cmd_out.heading_acceleration = position_cmd.heading_acceleration;
-  cmd_out.heading_jerk         = position_cmd.heading_jerk;
+  cmd_out.heading_rate         = tracker_cmd.heading_rate;
+  cmd_out.heading_acceleration = tracker_cmd.heading_acceleration;
+  cmd_out.heading_jerk         = tracker_cmd.heading_jerk;
 
   //}
 

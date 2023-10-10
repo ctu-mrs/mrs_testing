@@ -4,11 +4,14 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
         - /TF1/Frames1
         - /TF1/Tree1
+        - /Odometry1/odom_main1
+        - /Odometry1/odom_main1/Shape1
         - /MpcTracker1/CurrentTrajPoint1
-      Splitter Ratio: 0.800000011920929
-    Tree Height: 795
+      Splitter Ratio: 0.6962365508079529
+    Tree Height: 367
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -24,7 +27,6 @@ Panels:
     Name: Views
     Splitter Ratio: 0.5
   - Class: rviz/Time
-    Experimental: false
     Name: Time
     SyncMode: 0
     SyncSource: ""
@@ -51,7 +53,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 100
-      Reference Frame: uav1/gps_origin
+      Reference Frame: uav1/world_origin
       Value: true
     - Alpha: 0.5
       Cell Size: 5
@@ -69,13 +71,14 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 100
-      Reference Frame: uav1/gps_origin
+      Reference Frame: uav1/world_origin
       Value: true
     - Class: rviz/TF
       Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
+      Marker Alpha: 1
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -100,17 +103,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        uav1/fcu/arms:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        uav1/fcu/props:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        uav1/fcu/uav_marker:
+        uav1/fcu/arms_red:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -168,6 +161,7 @@ Visualization Manager:
           Keep: 1
           Name: cmd_odom
           Position Tolerance: 0.009999999776482582
+          Queue Size: 1
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -178,7 +172,7 @@ Visualization Manager:
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
             Value: Axes
-          Topic: /uav1/control_manager/cmd_odom
+          Topic: /uav1/control_manager/control_reference
           Unreliable: true
           Value: true
         - Class: rviz/Group
@@ -193,6 +187,7 @@ Visualization Manager:
               Head Length: 0.07000000029802322
               Head Radius: 0.029999999329447746
               Name: Poses
+              Queue Size: 10
               Shaft Length: 0.23000000417232513
               Shaft Radius: 0.009999999776482582
               Shape: Arrow (Flat)
@@ -204,7 +199,7 @@ Visualization Manager:
               Marker Topic: /uav1/control_manager/trajectory_original/markers
               Name: Markers
               Namespaces:
-                "": true
+                {}
               Queue Size: 100
               Value: true
           Enabled: true
@@ -234,6 +229,7 @@ Visualization Manager:
           Keep: 1
           Name: odom_main
           Position Tolerance: 0.009999999776482582
+          Queue Size: 10
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -243,8 +239,8 @@ Visualization Manager:
             Head Radius: 0.30000001192092896
             Shaft Length: 1
             Shaft Radius: 0.05000000074505806
-            Value: Arrow
-          Topic: /uav1/odometry/odom_main
+            Value: Axes
+          Topic: /uav1/estimation_manager/gps_garmin/odom/world
           Unreliable: true
           Value: true
       Enabled: true
@@ -261,6 +257,7 @@ Visualization Manager:
           Head Length: 0.07000000029802322
           Head Radius: 0.029999999329447746
           Name: MpcPredictionTrajectory
+          Queue Size: 10
           Shaft Length: 0.23000000417232513
           Shaft Radius: 0.009999999776482582
           Shape: Arrow (Flat)
@@ -277,6 +274,7 @@ Visualization Manager:
           Head Length: 0.07000000029802322
           Head Radius: 0.029999999329447746
           Name: MpcInnerReference
+          Queue Size: 10
           Shaft Length: 0.23000000417232513
           Shaft Radius: 0.009999999776482582
           Shape: Axes
@@ -292,6 +290,7 @@ Visualization Manager:
           Head Length: 0.30000001192092896
           Head Radius: 0.20000000298023224
           Name: CurrentTrajPoint
+          Queue Size: 10
           Shaft Length: 0.30000001192092896
           Shaft Radius: 0.05000000074505806
           Shape: Axes
@@ -310,6 +309,7 @@ Visualization Manager:
               Head Length: 0.07000000029802322
               Head Radius: 0.029999999329447746
               Name: Poses
+              Queue Size: 10
               Shaft Length: 0.23000000417232513
               Shaft Radius: 0.009999999776482582
               Shape: Arrow (Flat)
@@ -321,7 +321,7 @@ Visualization Manager:
               Marker Topic: /uav1/control_manager/mpc_tracker/trajectory_processed/markers
               Name: Markers
               Namespaces:
-                "": true
+                {}
               Queue Size: 100
               Value: true
           Enabled: true
@@ -332,7 +332,7 @@ Visualization Manager:
   Global Options:
     Background Color: 255; 255; 255
     Default Light: true
-    Fixed Frame: uav1/gps_origin
+    Fixed Frame: uav1/world_origin
     Frame Rate: 60
   Name: root
   Tools:
@@ -356,33 +356,33 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 13.16269588470459
+      Distance: 3.9103524684906006
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Field of View: 0.7853981852531433
       Focal Point:
-        X: -1.024606704711914
-        Y: -0.08421182632446289
-        Z: 2.1457672119140625e-6
+        X: -0.7366743087768555
+        Y: -0.10992985963821411
+        Z: 3.4570693969726562e-06
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7547973990440369
+      Pitch: 0.2997977137565613
       Target Frame: uav1/fcu
-      Value: ThirdPersonFollower (rviz)
-      Yaw: 3.160399913787842
+      Yaw: 2.680382490158081
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: true
-  Height: 1025
+  Height: 506
   Hide Left Dock: true
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd000000040000000000000156000003a4fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006200fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000004c6000001a1000001a900000153fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730000000040000003a4000000d500fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d00610067006502000003c9000003450000025b000000c90000000100000116000002a2fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000002a2000000aa00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000038f0000003efc0100000002fb0000000800540069006d006500000000000000038f0000026b00fffffffb0000000800540069006d00650100000000000004500000000000000000000004e8000003a400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd000000040000000000000176000002a2fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000004c6000001a1000001a900000153fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003b000002a2000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d00610067006502000003c9000003450000025b000000c90000000100000116000002a2fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000002a2000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000038f0000003efc0100000002fb0000000800540069006d006500000000000000038f0000035700fffffffb0000000800540069006d0065010000000000000450000000000000000000000762000001a400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -391,6 +391,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 1256
-  X: 1932
-  Y: 35
+  Width: 1890
+  X: 12
+  Y: 32

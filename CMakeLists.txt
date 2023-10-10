@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   std_msgs
   std_srvs
-  mavros_msgs
   dynamic_reconfigure
   rostest
   )
@@ -22,7 +21,7 @@ generate_dynamic_reconfigure_options(
   )
 
 set(LIBRARIES
-  RandomFlier TrajectoryRandomFlier PathRandomFlier CircleFlier TfTest
+  RandomFlier TrajectoryRandomFlier PathRandomFlier CircleFlier TfTest EmulateSensorErrors
   )
 
 set(EXECUTABLES
@@ -30,7 +29,7 @@ set(EXECUTABLES
   )
 
 catkin_package(
-  CATKIN_DEPENDS nav_msgs mrs_lib std_msgs std_srvs mavros_msgs
+  CATKIN_DEPENDS roscpp nodelet nav_msgs mrs_lib std_msgs std_srvs mrs_msgs dynamic_reconfigure rostest
   LIBRARIES ${LIBRARIES}
   )
 
@@ -118,6 +117,18 @@ target_link_libraries(TfTest
   ${catkin_LIBRARIES}
   )
 
+add_library(EmulateSensorErrors
+  src/emulate_sensor_errors.cpp
+  )
+
+add_dependencies(EmulateSensorErrors
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  )
+
+target_link_libraries(EmulateSensorErrors
+  ${catkin_LIBRARIES}
+  )
 ## --------------------------------------------------------------
 ## |                           Testing                          |
 ## --------------------------------------------------------------
@@ -155,21 +166,15 @@ install(TARGETS ${EXECUTABLES}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
 
-install(DIRECTORY launch config worlds layouts rviz test
+install(DIRECTORY launch config worlds layouts test
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   )
 
-install(DIRECTORY tmux scripts
+install(DIRECTORY tmux
   USE_SOURCE_PERMISSIONS
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   )
 
-install(DIRECTORY scripts/
-  USE_SOURCE_PERMISSIONS
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
-
-install(DIRECTORY ./
+install(FILES plugins.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  FILES_MATCHING PATTERN "*.xml"
   )

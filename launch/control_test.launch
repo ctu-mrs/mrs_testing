@@ -14,14 +14,14 @@
 
       <rosparam file="$(find mrs_uav_testing)/config/control_test.yaml" />
 
-      <!-- Load a user param file -->
+        <!-- Load a user param file -->
       <rosparam if="$(eval not arg('custom_config') == '')" file="$(arg custom_config)" />
 
       <param name="start_with_takeoff" value="$(arg start_with_takeoff)" />
 
         <!-- subscribers -->
-      <remap from="~odometry_in" to="odometry/odom_main" />
-      <remap from="~position_command_in" to="control_manager/position_cmd" />
+      <remap from="~odometry_in" to="estimation_manager/odom_main" />
+      <remap from="~tracker_cmd_in" to="control_manager/tracker_cmd" />
       <remap from="~control_manager_diagnostics_in" to="control_manager/diagnostics" />
       <remap from="~spawner_diagnostics_in" to="/mrs_drone_spawner/diagnostics" />
 
@@ -32,9 +32,9 @@
       <remap from="~set_heading_out" to="control_manager/set_heading" />
       <remap from="~set_heading_relative_out" to="control_manager/set_heading_relative" />
       <remap from="~switch_tracker_out" to="control_manager/switch_tracker" />
-      <remap from="~motors_out" to="control_manager/motors" />
-      <remap from="~arm_out" to="mavros/cmd/arming" />
-      <remap from="~offboard_out" to="mavros/set_mode" />
+      <remap from="~toggle_control_output_out" to="control_manager/toggle_output" />
+      <remap from="~arm_out" to="hw_api/arming" />
+      <remap from="~offboard_out" to="hw_api/offboard" />
       <remap from="~takeoff_out" to="uav_manager/takeoff" />
       <remap from="~land_out" to="uav_manager/land" />
       <remap from="~land_home_out" to="uav_manager/land_home" />
@@ -42,7 +42,7 @@
       <remap from="~start_trajectory_tracking_out" to="control_manager/start_trajectory_tracking" />
       <remap from="~stop_trajectory_tracking_out" to="control_manager/stop_trajectory_tracking" />
       <remap from="~resume_trajectory_tracking_out" to="control_manager/resume_trajectory_tracking" />
-      <remap from="~switch_estimator_out" to="odometry/change_odometry_source" />
+      <remap from="~switch_estimator_out" to="estimation_manager/change_estimator" />
       <remap from="~spawn_out" to="/mrs_drone_spawner/spawn" />
 
         <!-- services in -->

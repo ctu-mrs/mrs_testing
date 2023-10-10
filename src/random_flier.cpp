@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <mrs_msgs/PositionCommand.h>
+#include <mrs_msgs/TrackerCommand.h>
 #include <mrs_msgs/ReferenceStampedSrv.h>
 #include <std_srvs/Trigger.h>
 
@@ -36,13 +36,15 @@ private:
   void   timerMain(const ros::TimerEvent& event);
   double randd(double from, double to);
 
-  mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand> sh_position_cmd_;
+  mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand> sh_tracker_cmd_;
 
   ros::ServiceServer service_server_activate_;
 
   ros::ServiceClient service_client_reference_;
 
   ros::Timer main_timer_;
+
+  std::string _world_frame_;
 
   double _main_timer_rate_;
 
@@ -69,7 +71,7 @@ void RandomFlier::onInit(void) {
 
   mrs_lib::ParamLoader param_loader(nh_, "RandomFlier");
 
-  // load parameters from config file
+  param_loader.loadParam("world_frame", _world_frame_);
   param_loader.loadParam("main_timer_rate", _main_timer_rate_);
   param_loader.loadParam("height", _height_);
   param_loader.loadParam("active", active_);
@@ -89,7 +91,7 @@ void RandomFlier::onInit(void) {
   shopts.threadsafe         = true;
   shopts.transport_hints    = ros::TransportHints().tcpNoDelay();
 
-  sh_position_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::PositionCommand>(shopts, "position_command_in");
+  sh_tracker_cmd_ = mrs_lib::SubscribeHandler<mrs_msgs::TrackerCommand>(shopts, "position_command_in");
 
   service_server_activate_  = nh_.advertiseService("activate_in", &RandomFlier::callbackActivate, this);
   service_client_reference_ = nh_.serviceClient<mrs_msgs::ReferenceStampedSrv>("reference_out");
@@ -147,21 +149,21 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
     return;
   }
 
-  if (!sh_position_cmd_.hasMsg()) {
+  if (!sh_tracker_cmd_.hasMsg()) {
 
-    ROS_INFO_THROTTLE(1.0, "[RandomFlier]: waiting for PositionCommand");
+    ROS_INFO_THROTTLE(1.0, "[RandomFlier]: waiting for TrackerCommand");
     return;
   }
 
-  auto [cmd_speed_x, cmd_speed_y, cmd_speed_z] = mrs_lib::getVelocity(sh_position_cmd_.getMsg());
-  auto [cmd_x, cmd_y, cmd_z]                   = mrs_lib::getPosition(sh_position_cmd_.getMsg());
+  auto [cmd_speed_x, cmd_speed_y, cmd_speed_z] = mrs_lib::getVelocity(sh_tracker_cmd_.getMsg());
+  auto [cmd_x, cmd_y, cmd_z]                   = mrs_lib::getPosition(sh_tracker_cmd_.getMsg());
 
   // if the uav reach the previousy set destination
   if ((ros::Time::now() - last_successfull_command_).toSec() > 1.0 && fabs(cmd_speed_x) < 0.01 && fabs(cmd_speed_y) < 0.01) {
 
     // create new point to fly to
     mrs_msgs::ReferenceStampedSrv new_point;
-    new_point.request.header.frame_id = "gps_origin";
+    new_point.request.header.frame_id = _world_frame_;
 
     double dist, direction, heading;
 
@@ -185,6 +187,9 @@ void RandomFlier::timerMain([[maybe_unused]] const ros::TimerEvent& event) {
       new_point.request.reference.position.y = cmd_y + sin(direction) * dist;
       new_point.request.reference.position.z = _height_;
       new_point.request.reference.heading    = heading;
+
+      ROS_INFO("[RandomFlier]: setting refrence: x %.2f, y %.2f, z %.2f, heading %.2f", new_point.request.reference.position.x,
+               new_point.request.reference.position.y, new_point.request.reference.position.z, new_point.request.reference.heading);
 
       if (service_client_reference_.call(new_point)) {
 

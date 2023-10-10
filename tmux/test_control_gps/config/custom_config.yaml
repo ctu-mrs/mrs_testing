@@ -1,0 +1,36 @@
+mrs_uav_managers:
+
+  control_manager:
+
+    trackers: [
+      "LineTracker",
+    ]
+
+  estimation_manager:
+
+    # loaded state estimator plugins
+    state_estimators: [
+      "gps_baro",
+      "gps_garmin",
+      "ground_truth",
+    ]
+
+    initial_state_estimator: "gps_garmin" # will be used as the first state estimator
+    agl_height_estimator: "garmin_agl" # only slightly filtered height for checking min height (not used in control feedback)
+
+  constraint_manager:
+
+    default_constraints:
+
+      gps_baro: "fast"
+      gps_garmin: "fast"
+      ground_truth: "fast"
+
+  uav_manager:
+
+    takeoff:
+      after_takeoff:
+        controller: "MpcController"
+
+    landing:
+      disarm: true

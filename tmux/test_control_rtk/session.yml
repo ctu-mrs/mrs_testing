@@ -1,6 +1,6 @@
 name: simulation
 root: ./
-pre_window: export UAV_NAME=uav1; export UAV_TYPE=t650; export ODOMETRY_TYPE=rtk; export WORLD_NAME=simulation; export PX4_SIM_SPEED_FACTOR=1.0; export SENSORS="garmin_down"
+pre_window: export UAV_NAME=uav1; export UAV_TYPE=x500; export WORLD_NAME=simulation; export PX4_SIM_SPEED_FACTOR=1.0; export SENSORS="garmin_down, rtk"; export STANDALONE="false"
 startup_window: control_test
 windows:
   - roscore:
@@ -11,6 +11,14 @@ windows:
       layout: tiled
       panes:
         - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true
+  - hw_api:
+      layout: tiled
+      panes:
+        - waitForRos; roslaunch mrs_uav_hw_api api.launch custom_config:=`rospack find mrs_uav_px4_api`/config/px4_api.yaml
+  - rtk:
+      layout: tiled
+      panes:
+        - waitForRos; roslaunch mrs_uav_odometry rtk_republisher.launch 
   - rviz:
       layout: tiled
       panes:
@@ -20,11 +28,11 @@ windows:
   - status:
       layout: tiled
       panes:
-        - waitForOdometry; roslaunch mrs_uav_status status.launch
+        - waitForSimulation; roslaunch mrs_uav_status status.launch
   - control:
       layout: tiled
       panes:
-        - waitForOdometry; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml
+        - waitForSimulation; roslaunch mrs_uav_general core.launch DEBUG:=false config_uav_manager:=./custom_configs/uav_manager.yaml config_constraint_manager:=./custom_configs/constraint_manager.yaml config_active_estimators:=./custom_configs/active_estimators.yaml config_transform_manager:=./custom_configs/transform_manager.yaml
   - takeoff:
       layout: tiled
       panes:

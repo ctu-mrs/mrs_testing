@@ -15,9 +15,8 @@
       <param name="uav_name" value="$(arg UAV_NAME)" />
 
         <!-- Subscribers -->
-      <remap from="~position_command_in" to="control_manager/position_cmd" />
+      <remap from="~tracker_command_in" to="control_manager/tracker_cmd" />
       <remap from="~control_manager_diag_in" to="control_manager/diagnostics" />
-      <remap from="~mpc_prediction_in" to="control_manager/mpc_tracker/prediction_full_state" />
 
         <!-- Services -->
       <remap from="~activate_in" to="automatic_start/start" />
