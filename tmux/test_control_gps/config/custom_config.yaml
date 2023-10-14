@@ -2,6 +2,16 @@ mrs_uav_managers:
 
   control_manager:
 
+    Se3Controller:
+      eland_threshold: 4.0 # [m], position error triggering eland
+      failsafe_threshold: 8.0 # [m], position error triggering failsafe land
+      odometry_innovation_threshold: 1.5 # [m], position odometry innovation threshold
+
+    MpcController:
+      eland_threshold: 4.0 # [m], position error triggering eland
+      failsafe_threshold: 8.0 # [m], position error triggering failsafe land
+      odometry_innovation_threshold: 1.5 # [m], position odometry innovation threshold
+
     trackers: [
       "LineTracker",
     ]
@@ -30,7 +40,7 @@ mrs_uav_managers:
 
     takeoff:
       after_takeoff:
-        controller: "MpcController"
+        controller: "Se3Controller"
 
     landing:
       disarm: true

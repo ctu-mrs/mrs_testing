@@ -1,5 +1,11 @@
 mrs_uav_managers:
 
+  uav_manager:
+
+    takeoff:
+      after_takeoff:
+        controller: "Se3Controller"
+
   constraint_manager:
 
     default_constraints:
