@@ -1,7 +1,0 @@
-max_thrust:
-
-  enabled: false
-
-takeoff:
-
-  takeoff_height: 3.0

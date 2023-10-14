@@ -1,0 +1,47 @@
+mrs_uav_managers:
+
+  estimation_manager:
+
+    # loaded state estimator plugins
+    # available in mrs_uav_state_estimators: gps_garmin, gps_baro, rtk, aloam, ground_truth, dummy
+    state_estimators: [
+    "gps_garmin",
+    "gps_baro",
+    # "rtk",
+    # "aloam",
+    # "ground_truth",
+    # "dummy"
+    ]
+
+    initial_state_estimator: "gps_baro" # will be used as the first state estimator
+    agl_height_estimator: "garmin_agl" # only slightly filtered height for checking min height (not used in control feedback)
+
+  control_manager:
+
+    obstacle_bumper:
+
+      enabled: true
+
+      horizontal_distance: 2.0 # [m]
+      vertical_distance: 1.0 # [m]
+
+      obstacle_hugging:
+
+        enabled: true
+
+      # true: the drone will move away from obstacles that appear within the radius
+      repulsion:
+
+        enabled: true
+
+        horizontal_distance: 2.0 # [m]
+        horizontal_offset: 0.1 # [m] by how much to repulse from the horizontal_distance limit
+
+        vertical_distance: 1.0 # [m]
+        vertical_offset: 0.1 # [m]
+
+  uav_manager:
+
+    takeoff:
+      after_takeoff:
+        controller: Se3Controller

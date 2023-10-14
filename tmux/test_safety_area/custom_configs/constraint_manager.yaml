@@ -1,5 +1,0 @@
-constraint_management:
-
-  fallback_constraints:
-
-    gps_garmin: "fast"

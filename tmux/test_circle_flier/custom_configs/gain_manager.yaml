@@ -1,6 +1,0 @@
-gain_management:
-
-  fallback_gains:
-
-    gps_baro: "tight"
-    ground_truth: "tight"

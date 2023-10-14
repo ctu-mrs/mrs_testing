@@ -1,7 +1,12 @@
-name: simulation
+# do not modify these
 root: ./
-pre_window: export UAV_NAME=uav1; export UAV_TYPE=f450; export WORLD_NAME=simulation; export SENSORS="garmin_down"; export RUN_TYPE=simulation
-startup_window: control
+name: simulation
+socket_name: mrs
+attach: false
+tmux_options: -f /etc/ctu-mrs/tmux.conf
+# you can modify these
+pre_window: export UAV_NAME=uav1; export RUN_TYPE=simulation; export UAV_TYPE=f450
+startup_window: control_test
 windows:
   - roscore:
       layout: tiled
@@ -10,8 +15,8 @@ windows:
   - gazebo:
       layout: tiled
       panes:
-        - waitForRos; roslaunch mrs_simulation simulation.launch gui:=true world_name:=forest
-        - waitForTime; roslaunch mrs_uav_px4_api api.launch custom_config:=./custom_configs/hw_api_px4.yaml
+        - waitForRos; roslaunch mrs_uav_gazebo_simulation simulation.launch gui:=true world_name:=forest
+        - waitForTime; roslaunch mrs_uav_px4_api api.launch
   - rviz:
       layout: tiled
       panes:
@@ -31,27 +36,20 @@ windows:
       layout: tiled
       panes:
         - waitForHw; roslaunch mrs_bumper bumper.launch
-  - joystick:
-      layout: tiled
-      panes:
-        - waitForHw; roslaunch mrs_uav_general logitech_joystick.launch
   - control:
       layout: tiled
       panes:
-        - waitForHw; roslaunch mrs_uav_general core.launch DEBUG:=false config_control_manager:=./custom_configs/control_manager.yaml config_uav_manager:=./custom_configs/uav_manager.yaml
+        - waitForTime; roslaunch mrs_uav_core core.launch DEBUG:=false platform_config:=`rospack find mrs_multirotor_simulator`/config/mrs_uav_system/$UAV_TYPE.yaml custom_config:=./config/custom_config.yaml world_config:=./config/world_config.yaml network_config:=./config/network_config.yaml
   - random_flier:
       layout: tiled
       panes:
         - waitForHw; roslaunch mrs_uav_testing random_flier.launch
         # - waitForHw; roslaunch mrs_uav_testing trajectory_random_flier.launch
-  - autostart:
-      layout: tiled
-      panes:
-        - waitForHw; roslaunch mrs_uav_general automatic_start.launch
   - takeoff:
       layout: tiled
       panes:
-        - 'waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 0.1; rosservice call /$UAV_NAME/hw_api/offboard'
+        - waitForTime; roslaunch mrs_uav_autostart automatic_start.launch
+        - 'waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2.0; rosservice call /$UAV_NAME/hw_api/offboard'
   - gazebo_camera_follow:
       layout: tiled
       panes:

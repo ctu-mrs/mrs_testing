@@ -1,0 +1,81 @@
+mrs_uav_managers:
+
+  estimation_manager:
+
+    # loaded state estimator plugins
+    state_estimators: [
+      "gps_baro",
+      "gps_garmin",
+      "ground_truth",
+    ]
+
+    initial_state_estimator: "gps_baro" # will be used as the first state estimator
+    agl_height_estimator: "garmin_agl" # only slightly filtered height for checking min height (not used in control feedback)
+
+  constraint_manager:
+
+    constraints: [
+      "slow",
+      "medium",
+      "fast",
+      "insane"
+    ]
+
+    allowed_constraints:
+
+      gps_baro: ["slow", "medium", "fast", "insane"]
+      ground_truth: ["slow", "medium", "fast", "insane"]
+      gps_garmin: ["slow", "medium", "fast", "insane"]
+
+    default_constraints:
+
+      gps_baro: "insane"
+      gps_garmin: "insane"
+      ground_truth: "insane"
+
+    insane:
+
+      horizontal:
+        speed: 9.0
+        acceleration: 12.0
+        jerk: 50.0
+        snap: 50.0
+
+      vertical:
+
+        ascending:
+          speed: 9.0
+          acceleration: 12.0
+          jerk: 50.0
+          snap: 50.0
+
+        descending:
+          speed: 9.0
+          acceleration: 12.0
+          jerk: 50.0
+          snap: 50.0
+
+      heading:
+        speed: 3.5
+        acceleration: 1.0
+        jerk: 50.0
+        snap: 50.0
+
+      angular_speed:
+        roll: 60.0
+        pitch: 60.0
+        yaw: 10.0
+
+      tilt: 90.0 # [deg]
+
+  uav_manager:
+
+    takeoff:
+
+      during_takeoff:
+        controller: "MpcController"
+        tracker: "LandoffTracker"
+
+      after_takeoff:
+        controller: "Se3Controller"
+        tracker: "MpcTracker"

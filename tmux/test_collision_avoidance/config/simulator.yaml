@@ -1,0 +1,65 @@
+simulation_rate: 100.0 # Hz
+clock_rate: 100.0 # Hz
+realtime_factor: 1.0 # [-]
+
+iterate_without_input: true
+
+collisions:
+  enabled: true
+  crash: true
+
+frames:
+  world:
+    name: "simulator_origin"
+    prefix_with_uav_name: false
+  fcu:
+    name: "fcu"
+    publish_tf: true
+
+uav_names: [
+  "uav1",
+  "uav2",
+  "uav3",
+  "uav4",
+  "uav5",
+]
+
+uav1:
+  type: "x500"
+  spawn:
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    heading: 0.0
+
+uav2:
+  type: "x500"
+  spawn:
+    x: 5.0
+    y: 0.0
+    z: 1.0
+    heading: 0.0
+
+uav3:
+  type: "x500"
+  spawn:
+    x: -5.0
+    y: 0.0
+    z: 1.0
+    heading: 0.0
+
+uav4:
+  type: "x500"
+  spawn:
+    x: -5.0
+    y: 5.0
+    z: 1.0
+    heading: 0.0
+
+uav5:
+  type: "x500"
+  spawn:
+    x: -5.0
+    y: -5.0
+    z: 1.0
+    heading: 0.0
