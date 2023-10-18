@@ -40,7 +40,8 @@ mrs_uav_managers:
 
     takeoff:
       after_takeoff:
-        controller: "Se3Controller"
+        controller: "MpcController"
+        tracker: "MpcTracker"
 
     landing:
       disarm: true
