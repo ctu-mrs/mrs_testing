@@ -50,11 +50,11 @@ private:
 
   // parameters loaded from config file
   double _height_;
-  bool   _randomize_distance_ = false;
-  bool   _randomize_heading_  = false;
+  bool   _randomize_distance_;
+  bool   _randomize_heading_;
   double _max_distance_;
 
-  bool active_ = true;
+  bool active_;
 
   ros::Time last_successfull_command_;
 };

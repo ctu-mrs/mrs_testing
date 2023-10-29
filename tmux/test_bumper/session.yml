@@ -1,5 +1,5 @@
 # do not modify these
-root: ./
+aoot: ./
 name: simulation
 socket_name: mrs
 attach: false
@@ -43,7 +43,7 @@ windows:
   - random_flier:
       layout: tiled
       panes:
-        - waitForHw; roslaunch mrs_uav_testing random_flier.launch
+        - waitForHw; roslaunch mrs_uav_testing random_flier.launch custom_config:=./config/random_flier.yaml
         # - waitForHw; roslaunch mrs_uav_testing trajectory_random_flier.launch
   - takeoff:
       layout: tiled

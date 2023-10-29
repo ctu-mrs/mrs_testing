@@ -1,0 +1,5 @@
+active: true
+max_distance: 20.0
+height: 1.5
+randomize_distance: true
+randomize_heading: true
