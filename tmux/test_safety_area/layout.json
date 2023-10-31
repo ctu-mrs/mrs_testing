@@ -1,19 +1,52 @@
 [
-	{
-		"border": "normal",
+{
+	"border": "normal",
 		"floating": "auto_off",
 		"fullscreen_mode": 0,
 		"layout": "splitv",
 		"percent": 1,
 		"type": "con",
 		"nodes": [
+		{
+			"border": "pixel",
+			"current_border_width": 3,
+			"floating": "auto_off",
+			"geometry": {
+				"height": 1030,
+				"width": 936,
+				"x": 966,
+				"y": 32
+			},
+			"name": "avoidance_test.rviz* - RViz",
+			"percent": 0.5,
+			"swallows": [
+			{
+				"instance": "^rviz$"
+			}
+			],
+			"type": "con"
+		},
+		{
+			"border": "normal",
+			"floating": "auto_off",
+			"layout": "splith",
+			"percent": 0.5,
+			"type": "con",
+			"nodes": [
 			{
 				"border": "normal",
 				"floating": "auto_off",
 				"layout": "splith",
-				"percent": 0.5,
+				"percent": 1,
 				"type": "con",
 				"nodes": [
+				{
+					"border": "normal",
+					"floating": "auto_off",
+					"layout": "splitv",
+					"percent": 1,
+					"type": "con",
+					"nodes": [
 					{
 						"border": "pixel",
 						"current_border_width": 3,
@@ -24,73 +57,21 @@
 							"x": 0,
 							"y": 0
 						},
-						"name": "uav1_safety_area.rviz* - RViz",
-						"percent": 0.5,
+						"name": "sourceShellDotfile",
+						"percent": 1,
 						"swallows": [
-							{
-								"instance": "^rviz$"
-							}
+						{
+							"instance": "^urxvt$"
+						}
 						],
 						"type": "con"
-					},
-					{
-						"border": "normal",
-						"floating": "auto_off",
-						"layout": "splith",
-						"percent": 0.5,
-						"type": "con",
-						"nodes": [
-							{
-								"border": "normal",
-								"floating": "auto_off",
-								"layout": "splitv",
-								"percent": 1,
-								"type": "con",
-								"nodes": [
-									{
-										"border": "pixel",
-										"current_border_width": 3,
-										"floating": "auto_off",
-										"geometry": {
-											"height": 460,
-											"width": 724,
-											"x": 0,
-											"y": 0
-										},
-										"name": "Gazebo",
-										"percent": 1,
-										"swallows": [
-											{
-												"instance": "^gazebo$"
-											}
-										],
-										"type": "con"
-									}
-								]
-							}
-						]
 					}
+					]
+				}
 				]
-			},
-			{
-				"border": "pixel",
-				"current_border_width": 3,
-				"floating": "auto_off",
-				"geometry": {
-					"height": 460,
-					"width": 724,
-					"x": 0,
-					"y": 0
-				},
-				"name": "runVim session.yml",
-				"percent": 0.5,
-				"swallows": [
-					{
-						"instance": "^urxvt$"
-					}
-				],
-				"type": "con"
 			}
-		]
-	}
+			]
+		}
+	]
+}
 ]

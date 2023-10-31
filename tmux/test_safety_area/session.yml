@@ -15,14 +15,8 @@ windows:
   - mrs_simulator:
       layout: tiled
       panes:
-        - waitForRos; export UAV_NAME=uav1; roslaunch mrs_multirotor_simulator multirotor_simulator.launch config:=./custom_configs/simulator.yaml
-        - waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch cgustom_config:=./custom_configs/hw_api_mrs_sim.yaml
-  # - gazebo:
-  #     layout: tiled
-  #     panes:
-  #       - waitForRos; roslaunch mrs_uav_testing simulation.launch gui:=true world_name:=safety_area
-  #       - waitForTime; roslaunch mrs_uav_px4_api api.launch config:=./custom_configs/hw_api_px4.yaml
-  #       - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --pos_file `pwd`/init_pos.yaml"
+        - waitForRos; export UAV_NAME=uav1; roslaunch mrs_multirotor_simulator multirotor_simulator.launch custom_config:=./config/simulator.yaml
+        - waitForTime; roslaunch mrs_multirotor_simulator hw_api.launch
   - rviz:
       layout: tiled
       panes:
@@ -54,8 +48,7 @@ windows:
       panes:
         - waitForTime; roslaunch mrs_uav_autostart automatic_start.launch
         - 'waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2.0; rosservice call /$UAV_NAME/hw_api/offboard'
-  - gazebo_camera_follow:
+  - layout:
       layout: tiled
       panes:
-        - waitForControl; gz camera -c gzclient_camera -f uav1; history -s gz camera -c gzclient_camera -f uav1
         - waitForControl; sleep 3; ~/.i3/layout_manager.sh layout.json

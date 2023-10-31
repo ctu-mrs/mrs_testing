@@ -1,6 +1,6 @@
 relax_heading: true
 
-frame_id: "world_origin"
+frame_id: "local_origin"
 
 z:
   value: 5.0

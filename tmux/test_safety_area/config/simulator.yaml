@@ -15,6 +15,6 @@ uav1:
   type: "t650"
   spawn:
     x: 0.0
-    y: 10.0
+    y: -10.0
     z: 1.0
     heading: 0.0

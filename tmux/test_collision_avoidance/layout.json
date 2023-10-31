@@ -3,47 +3,19 @@
 	"border": "normal",
 		"floating": "auto_off",
 		"fullscreen_mode": 0,
-		"layout": "splith",
-		"percent": 0.323232323232323,
+		"layout": "splitv",
+		"percent": 1,
 		"type": "con",
 		"nodes": [
-		{
-			"border": "normal",
-			"floating": "auto_off",
-			"layout": "splitv",
-			"percent": 0.5,
-			"type": "con",
-			"nodes": [
-			{
-				"border": "pixel",
-				"current_border_width": 3,
-				"floating": "auto_off",
-				"geometry": {
-					"height": 460,
-					"width": 724,
-					"x": 0,
-					"y": 0
-				},
-				"name": "./start.sh",
-				"percent": 1,
-				"swallows": [
-				{
-					"instance": "^urxvt$"
-				}
-				],
-				"type": "con"
-			}
-			]
-		},
 		{
 			"border": "pixel",
 			"current_border_width": 3,
 			"floating": "auto_off",
 			"geometry": {
-				"height": 1028,
+				"height": 1030,
 				"width": 936,
 				"x": 966,
-				"y": 34
+				"y": 32
 			},
 			"name": "avoidance_test.rviz* - RViz",
 			"percent": 0.5,
@@ -53,6 +25,52 @@
 			}
 			],
 			"type": "con"
+		},
+		{
+			"border": "normal",
+			"floating": "auto_off",
+			"layout": "splith",
+			"percent": 0.5,
+			"type": "con",
+			"nodes": [
+			{
+				"border": "normal",
+				"floating": "auto_off",
+				"layout": "splith",
+				"percent": 1,
+				"type": "con",
+				"nodes": [
+				{
+					"border": "normal",
+					"floating": "auto_off",
+					"layout": "splitv",
+					"percent": 1,
+					"type": "con",
+					"nodes": [
+					{
+						"border": "pixel",
+						"current_border_width": 3,
+						"floating": "auto_off",
+						"geometry": {
+							"height": 460,
+							"width": 724,
+							"x": 0,
+							"y": 0
+						},
+						"name": "sourceShellDotfile",
+						"percent": 1,
+						"swallows": [
+						{
+							"instance": "^urxvt$"
+						}
+						],
+						"type": "con"
+					}
+					]
+				}
+				]
+			}
+			]
 		}
 	]
 }
